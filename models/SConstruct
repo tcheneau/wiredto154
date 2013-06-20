@@ -1,6 +1,6 @@
 import os
 
-Library("models", Split("simulation.cpp coordinate.cpp pathlossmodel.cpp node.cpp IEEE802154.cpp"))
+Library("models", Split("simulation.cpp coordinate.cpp pathlossmodel.cpp modulation.cpp IEEE802154.cpp"))
 
 env_boost = Environment()
 boost_prefix = "/usr"

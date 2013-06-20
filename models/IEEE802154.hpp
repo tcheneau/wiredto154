@@ -4,11 +4,10 @@
 #include "modulation.hpp"
 
 class Phy_IEEE802154_OQPSK: public Modulation {
-		static const std::string modulation ;
 	public:
+		static const std::string modulation;
 		static double compute_BER(double sinr);
 		static double compute_PER(double sinr, int packetlen);
-		static const std::string get_modulation(void) { return modulation; };
 };
 
 #endif

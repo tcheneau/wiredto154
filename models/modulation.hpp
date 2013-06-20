@@ -2,13 +2,14 @@
 #define WIREDTO154_MODELS_MODULATION_H
 
 #include <string>
+#include <iostream>
 
 class Modulation {
-		static const std::string modulation;
+		Modulation() {};
 	public:
+		static const std::string modulation;
 		static double compute_BER(double sinr);
 		static double compute_PER(double sinr, int packetlen);
-		static const std::string get_modulation(void);
 };
 
 #endif /* WIREDTO154_MODELS_MODULATION_H */

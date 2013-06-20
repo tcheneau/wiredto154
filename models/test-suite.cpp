@@ -19,19 +19,27 @@ int main(int argc, char const* argv[])
 	double result = Phy_IEEE802154_OQPSK::compute_BER(10);
 	string str = boost::lexical_cast<string>(result);
 	cout << str << endl;
-	cout << Phy_IEEE802154_OQPSK::get_modulation() << endl;
+	cout << Phy_IEEE802154_OQPSK::modulation << endl;
 
 	print_separator();
 	cout << "Node tests " << endl;
 	print_separator();
 	cout << endl;
 
-	Node<> a(string("one"), Coordinate2D(0., 0.), 4., -95.);
-	Node<> b(string("two"), Coordinate2D(0., 1.), 4., -95.);
+	string one("one");
+	string two("two");
+	Coordinate2D one_coord(0., 0.);
+	Coordinate2D two_coord(0., 1.);
+	Node<> a(one, one_coord, 4., -95.);
+	Node<> b(two, two_coord, 4., -95.);
+
+	cout << a << std::endl;
+	cout << b << std::endl;
 
 	cout << "distance between" << a.get_name()
 		 << " and " << b.get_name()
-		 << " is " << boost::lexical_cast<string>(a.distance(b));
+		 << " is " << boost::lexical_cast<string>(a.distance(b))
+		 << endl;
 
 
 	print_separator();
