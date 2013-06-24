@@ -5,7 +5,7 @@ boost_prefix = "/usr"
 libs = [ 'boost_program_options' ]
 
 
-SConscript('models/SConscript', export='models_lib') #, variant_dir='build')
+SConscript('models/SConscript')
 SConscript('tests/SConscript')
 
 sources = env.Glob("*.cpp")
