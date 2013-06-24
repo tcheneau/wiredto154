@@ -23,9 +23,9 @@ class Node {
 		float rxSensitivity;
 	public:
 		Node(const std::string & name, const Coord & coordinate, float txPower, float rxSensitivity);
-		float distance(Node<Coord> & other) { return coordinate.distance(&other.coordinate); };
-		float get_txPower(void) { return txPower; };
-		float get_rxSensitivity(void) { return rxSensitivity; };
+		float distance(Node<Coord> & other) { return coordinate.distance(&other.coordinate); }
+		float get_txPower(void) { return txPower; }
+		float get_rxSensitivity(void) { return rxSensitivity; }
 		const std::string & get_name(void) { return name; }
 		friend std::ostream & operator<< <> (std::ostream & os, const Node<Coord> & node);
 };

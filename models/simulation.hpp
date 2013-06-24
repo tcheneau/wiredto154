@@ -9,7 +9,7 @@ class Simulation {
 		typedef boost::mt19937 rng;
 		static rng randomness;
 	private:
-		Simulation () { randomness(); };
+		Simulation () { randomness(); }
 };
 
 #define WIREDTO154_MODELS_SIMULATION_H

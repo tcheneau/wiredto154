@@ -5,6 +5,7 @@
 #include <iostream>
 #include <boost/lexical_cast.hpp>
 #include <string>
+#include <vector>
 
 using namespace std;
 using std::string;
@@ -46,6 +47,15 @@ int main(int argc, char const* argv[])
 	cout << "BER tests " << endl;
 	print_separator();
 	cout << endl;
+
+	float ber_range [] = { -10, -5, 0, 5, 10, 15};
+
+	vector<float> ber_vect(ber_range, ber_range + sizeof(ber_range) / sizeof(* ber_range));
+
+	for (std::vector<float>::iterator it = ber_vect.begin(); it != ber_vect.end(); ++it)
+		cout << "bit error rate at " << *it << "db: "
+			 << boost::lexical_cast<string>(Phy_IEEE802154_OQPSK::compute_BER(*it))
+			 << endl;
 
 	print_separator();
 	cout << "LogNormalShadowing tests " << endl;

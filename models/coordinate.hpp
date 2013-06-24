@@ -18,6 +18,8 @@ class Coordinate2D: public Coordinate {
 		Coordinate2D() { this->x = 0; this->y = 0;};
 		Coordinate2D(float x, float y) { this->x = x; this->y = y;};
 		virtual float distance(Coordinate * b);
+		virtual float get_x() const { return x; }
+		virtual float get_y() const { return y; }
 };
 
 std::ostream & operator<<(std::ostream & os, const Coordinate & c);
