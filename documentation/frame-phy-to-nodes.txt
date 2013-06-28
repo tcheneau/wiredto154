@@ -1,0 +1,15 @@
+{
+colwidth = 64
+node_height = 72
+
+0-7: Magic value (0x00)
+8-71: Timestamp
+72-87: Receiving node ID
+88-103: ...
+104-119: Receiving node ID
+120-135: Reserved (0x00000000)
+136-151: Receiving node ID
+152-167: ...
+168-183: Receiving node ID
+184-199: Reserved (0x00000000)
+}
