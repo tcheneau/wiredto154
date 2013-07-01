@@ -71,5 +71,10 @@ int main(int argc, char const* argv[])
         cout << e.what() << "\n";
         return 1;
     }
+
+	// TBD: read the topology from an XML file
+
+	// TBD: start the asynchronous server
+
     return 0;
 }

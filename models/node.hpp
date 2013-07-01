@@ -7,10 +7,10 @@
 #include "coordinate.hpp"
 
 
+#include <boost/shared_ptr.hpp>
 #include <iostream>
+#include <list>
 #include <string>
-
-#include <boost/serialization/base_object.hpp>
 
 template <typename Coord> class Node;
 
@@ -19,18 +19,13 @@ std::ostream & operator<< (std::ostream & os, const Node<Coord> & node);
 
 template<typename Coord=Coordinate2D>
 class Node {
-		friend class boost::serialization::access;
-
 		const std::string & name;
 		Coord coordinate;
 		float txPower;
 		float rxSensitivity;
-
-		template<class Archive>
-		void serialize(Archive & ar, const unsigned int version){
-			ar & name & coordinate & txPower & rxSensitivity;
-		}
 	public:
+		typedef boost::shared_ptr< Node<Coord> > node_ptr;
+		typedef std::list<node_ptr> node_list;
 		Node(const std::string & name, const Coord & coordinate, float txPower, float rxSensitivity);
 		float distance(Node<Coord> & other) { return coordinate.distance(&other.coordinate); }
 		float get_txPower(void) { return txPower; }
@@ -40,8 +35,8 @@ class Node {
 };
 
 template<typename Coord>
-Node<Coord>::Node(const std::string & node_name, const Coord & coordinate, float txPower, float rxSensitivity)
- : name(node_name) {
+Node<Coord>::Node(const std::string & node_name, const Coord & coordinate, float txPower, float rxSensitivity):
+	name(node_name) {
 	this->coordinate = coordinate;
 	this->txPower = txPower;
 	this->rxSensitivity = rxSensitivity;
