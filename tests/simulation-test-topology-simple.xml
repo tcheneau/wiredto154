@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<simulation>
+<nodes>
+	<node port="10001" id="1" type="linux" description="one" x="1.0" y="1.0" txPower="3" rxSensitivity="-85" />
+	<node port="10002" id="2" type="linux" description="two" x="2.0" y="10.0" txPower="3" rxSensitivity="-85" />
+	<node port="10003" id="3" type="linux" description="three" x="-1.0" y="5.0" txPower="3" rxSensitivity="-85" />
+</nodes>
+</simulation>

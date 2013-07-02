@@ -11,7 +11,7 @@ Dependencies
 ------------
 
 * Boost library (C++)
-* TinyXML
+* pugixml
 
 
 Path loss model

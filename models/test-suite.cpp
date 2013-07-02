@@ -31,14 +31,14 @@ int main(int argc, char const* argv[])
 	string two("two");
 	Coordinate2D one_coord(0., 0.);
 	Coordinate2D two_coord(0., 1.);
-	Node<> a(one, one_coord, 4., -95.);
-	Node<> b(two, two_coord, 4., -95.);
+	Node<> a(1, one_coord, 4., -95., one, "none");
+	Node<> b(2, two_coord, 4., -95., two, "none");
 
 	cout << a << std::endl;
 	cout << b << std::endl;
 
-	cout << "distance between" << a.get_name()
-		 << " and " << b.get_name()
+	cout << "distance between" << a.get_id()
+		 << " and " << b.get_id()
 		 << " is " << boost::lexical_cast<string>(a.distance(b))
 		 << endl;
 
