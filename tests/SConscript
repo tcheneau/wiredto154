@@ -3,6 +3,8 @@ import os
 env_test = Environment()
 
 Import('models_lib')
+Import('core_lib')
+Import('network_lib')
 
 boost_prefix = "/usr"
 libs = [ 'boost_unit_test_framework', models_lib ]
@@ -12,6 +14,8 @@ env_test.Append(CPPPATH= "../models")
 env_test.Append(LIBPATH = [os.path.join(boost_prefix, "lib")])
 app = env_test.Program(source = "coordinate-test.cpp", LIBS = libs, LIBPATH = [ "../models" ])
 app2 = env_test.Program(source = "IEEE802154-test.cpp", LIBS = libs, LIBPATH = [ "../models" ])
-app3 = env_test.Program(source = "simulation-test.cpp", LIBS = libs + ["pugixml"], LIBPATH = [ "../models" ])
+app3 = env_test.Program(source = "simulation-test.cpp", 
+		CPPPATH=["../core", "../models", "../network"],
+		LIBS = libs + [ core_lib, network_lib ] + ["pugixml"] + ["pthread", "boost_system-mt"])
 env_test.Default([app, app2, app3])
 

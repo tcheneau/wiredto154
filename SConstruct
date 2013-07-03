@@ -6,6 +6,8 @@ libs = [ 'boost_program_options' ]
 
 
 SConscript('models/SConscript')
+SConscript('network/SConscript')
+SConscript('core/SConscript')
 SConscript('tests/SConscript')
 
 sources = env.Glob("*.cpp")

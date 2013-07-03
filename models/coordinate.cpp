@@ -9,6 +9,9 @@ std::ostream & Coordinate::dump(std::ostream & os) const {
 	return os;
 }
 
+Coordinate2D::Coordinate2D(void) { this->x = 0; this->y = 0;}
+Coordinate2D::Coordinate2D(float x, float y) { this->x = x; this->y = y;}
+
 std::ostream & Coordinate2D::dump(std::ostream & os) const {
 	return os << "x: " << boost::lexical_cast<std::string>(x) << std::endl
 			  << "y: " << boost::lexical_cast<std::string>(y);

@@ -5,9 +5,9 @@
 #include "exception.hpp"
 #include "modulation.hpp"
 #include "node.hpp"
-#include "simulation.hpp"
 
 #include <string>
+#include <boost/random/mersenne_twister.hpp>
 #include <boost/random/normal_distribution.hpp>
 #include <boost/random/variate_generator.hpp>
 
@@ -19,7 +19,8 @@ class PathLossModel {
 	virtual bool receivePacket(Node<> & sender,
 							   Node<> & receiver,
 							   const std::string & msg,
-							   Modulation modscheme)=0;
+							   Modulation modscheme,
+							   boost::mt19937 randomness)=0;
 	virtual double compute_SINR(Node<> & sender, Node<> & receiver) throw(ModelException) = 0;
 	void init(void);
 	void register_model(PathLossModel& model);
@@ -38,20 +39,22 @@ class LogNormalShadowing: public PathLossModel {
 
 	typedef boost::normal_distribution<double> normal_dist;
 	normal_dist randvar;
-	boost::variate_generator<Simulation::rng &, normal_dist> X_sigma;
+	boost::variate_generator<boost::mt19937 &, normal_dist> X_sigma;
 
 	public:
 		LogNormalShadowing(double d0,
 						   double path_loss,
 						   double shadowing_deviation,
 						   double path_loss_d0,
-						   double background_noise);
+						   double background_noise,
+						   boost::mt19937 randomness);
 		LogNormalShadowing(const std::string& name,
 						   double d0,
 						   double path_loss,
 						   double shadowing_deviation,
 						   double path_loss_d0,
-						   double background_noise);
+						   double background_noise,
+						   boost::mt19937 randomness);
 		virtual const std::string & get_model_name(void);
 		virtual bool receivePacket(Node<> & sender,
 								   Node<> & receiver,

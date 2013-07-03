@@ -18,6 +18,7 @@ class Simulation {
 		void load(const char * filename);
 		static Simulation & get(void);
 		void set_seed(int seed) { randomness.seed(seed); }
+		std::map<int, Node<>::node_ptr> nodes;
 	private:
 		bool initialized;
 		void init(void);
@@ -25,7 +26,6 @@ class Simulation {
 		boost::shared_ptr<PathLossModel> pathloss;
 		boost::shared_ptr<Modulation> modulation;
 		Server::server_list servers;
-		std::map<int, Node<>::node_ptr> nodes;
 		Simulation () { randomness(); initialized = false; }
 };
 

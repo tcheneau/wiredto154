@@ -33,8 +33,9 @@ LogNormalShadowing::LogNormalShadowing(double d0,
 									   double path_loss,
 									   double shadowing_deviation,
 									   double path_loss_d0,
-									   double background_noise):
-									   randvar(0.0, shadowing_deviation), X_sigma(Simulation::randomness, randvar) {
+									   double background_noise,
+									   boost::mt19937 randomness):
+									   randvar(0.0, shadowing_deviation), X_sigma(randomness, randvar) {
 	this->d0 = d0;
 	this->path_loss = path_loss;
 	this->shadowing_deviation = shadowing_deviation;
@@ -47,8 +48,9 @@ LogNormalShadowing::LogNormalShadowing(const std::string& name,
 									   double path_loss,
 									   double shadowing_deviation,
 									   double path_loss_d0,
-									   double background_noise):
-									   randvar(0.0, shadowing_deviation), X_sigma(Simulation::randomness, randvar) {
+									   double background_noise,
+									   boost::mt19937 randomness):
+									   randvar(0.0, shadowing_deviation), X_sigma(randomness, randvar) {
 	this->set_name(name);
 	this->d0 = d0;
 	this->path_loss = path_loss;

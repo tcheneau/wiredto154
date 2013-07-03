@@ -1,6 +1,6 @@
 import os
 
-models_lib = Library("models", Split("simulation.cpp coordinate.cpp pathlossmodel.cpp modulation.cpp IEEE802154.cpp"))
+models_lib = Library("models", Split("coordinate.cpp pathlossmodel.cpp modulation.cpp IEEE802154.cpp"))
 Export('models_lib')
 
 env_boost = Environment()

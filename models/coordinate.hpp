@@ -15,8 +15,8 @@ class Coordinate2D: public Coordinate {
 		float y;
 	public:
 		virtual std::ostream & dump(std::ostream & os) const;
-		Coordinate2D() { this->x = 0; this->y = 0;};
-		Coordinate2D(float x, float y) { this->x = x; this->y = y;};
+		Coordinate2D();
+		Coordinate2D(float x, float y);
 		virtual float distance(Coordinate * b);
 		virtual float get_x() const { return x; }
 		virtual float get_y() const { return y; }
