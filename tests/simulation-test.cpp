@@ -5,13 +5,11 @@
 
 #include "simulation.hpp"
 
-#include <iostream>
-
 BOOST_AUTO_TEST_CASE( loading_test ) {
 	Simulation & sim = Simulation::get();
 	sim.load("simulation-test-topology-simple.xml");
 	BOOST_CHECK_EQUAL(sim.nodes[10001]->get_id(), 1);
-	std::cout << sim.nodes[10001]->get_type() << std::endl;
-	BOOST_CHECK_EQUAL(sim.nodes[10001]->get_type(), "unknown");
+	BOOST_CHECK_EQUAL(sim.nodes[10001]->get_type(), "linux");
+	BOOST_CHECK_EQUAL(sim.nodes[10002]->get_type(), "unknown");
 }
 

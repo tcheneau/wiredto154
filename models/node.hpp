@@ -19,8 +19,8 @@ std::ostream & operator<< (std::ostream & os, const Node<Coord> & node);
 
 template<typename Coord=Coordinate2D>
 class Node {
-		const std::string & description;
-		const std::string & type;
+		const std::string description;
+		const std::string type;
 		Coord coordinate;
 		int id;
 		float txPower;

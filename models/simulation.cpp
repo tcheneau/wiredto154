@@ -59,14 +59,15 @@ void Simulation::load(const char * filename) {
 		if (node_type.empty())
 			node_type.assign("unknown");
 
-		nodes[node_port.as_int()] = Node<>::node_ptr(new Node<>::Node(node_id.as_int(),
-													 Coordinate2D(node_x.as_float(), node_y.as_float()),
-													 node_txPower.as_float(),
-													 node_rxSensitivity.as_float(),
-													 node_description,
-													 node_type));
 
+		nodes[node_port.as_int()] = Node<>::node_ptr(new Node<>(node_id.as_int(),
+					Coordinate2D(node_x.as_float(), node_y.as_float()),
+					node_txPower.as_float(),
+					node_rxSensitivity.as_float(),
+					node_description,
+					node_type)
 
+				);
 	}
 }
 

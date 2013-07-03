@@ -1,4 +1,5 @@
 #ifndef WIREDTO154_MODELS_SIMULATION_H
+#define WIREDTO154_MODELS_SIMULATION_H
 
 #include "coordinate.hpp"
 #include "node.hpp"
@@ -20,5 +21,4 @@ class Simulation {
 		Simulation () { randomness(); initialized = false; }
 };
 
-#define WIREDTO154_MODELS_SIMULATION_H
 #endif /* WIREDTO154_MODELS_SIMULATION_H */
