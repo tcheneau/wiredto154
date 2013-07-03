@@ -26,6 +26,7 @@ void Simulation::load(const char * filename) {
 		throw result.description();
 
 	nodes.clear();
+	servers.clear();
 
 	xml_nodes = doc.child("simulation").child("nodes");
 	if (!xml_nodes)
@@ -68,6 +69,10 @@ void Simulation::load(const char * filename) {
 					node_type)
 
 				);
+
+		servers.push_back(Server::server_ptr(new Server(io_service, node_port.as_int())));
 	}
+
+	// start a server on each ports
 }
 
