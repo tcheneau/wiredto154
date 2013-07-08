@@ -1,0 +1,8 @@
+Import('models_lib')
+Import('network_lib')
+
+libs = [ models_lib, network_lib ]
+
+core_lib = Library("network", Split("simulation.cpp"), CPPPATH=["../models", "../network"], LIBS= libs + ["pthread", "boost_system-mt"])
+Export('core_lib')
+Default(core_lib)
