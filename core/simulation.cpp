@@ -17,9 +17,9 @@ void Simulation::init(void) {
 	// TBD: initialisation code
 }
 
-void Simulation::load(const char * filename) {
+void Simulation::load(const std::string & filename) {
 	pugi::xml_document doc;
-	pugi::xml_parse_result result = doc.load_file(filename);
+	pugi::xml_parse_result result = doc.load_file(filename.c_str());
 	pugi::xml_node xml_nodes;
 
 	if (!result)
@@ -76,3 +76,29 @@ void Simulation::load(const char * filename) {
 	// start a server on each ports
 }
 
+bool Simulation::receivePacket(Node <> & sender,
+							   Node <> & receiver,
+							   const std::string & msg) {
+	// compute the SNR at the receiver
+	// apply the BER model to determine if the packets can be received
+	return true;
+}
+
+bool Simulation::is_properly_configured(std::string & error_msg) {
+	if (!initialized) {
+		error_msg = "Simulation has not been initialized properly";
+		return false;
+	}
+	if (!pathloss) {
+		error_msg = "Propagation model is not set";
+		return false;
+	}
+
+	if (!modulation) {
+		error_msg = "Modulation scheme is not set";
+		return false;
+	}
+
+	return true;
+
+}

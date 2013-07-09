@@ -21,15 +21,21 @@
 
 /* Tony Cheneau <tony.cheneau@nist.gov> */
 
-#include <boost/program_options.hpp>
+#include "core/simulation.hpp"
 
-namespace po = boost::program_options;
-
+#include <cstdlib>
 #include <iostream>
+#include <boost/program_options.hpp>
+namespace po = boost::program_options;
 using namespace std;
 
 int main(int argc, char const* argv[])
 {
+	string error_msg;
+	string modulation_model;
+	string pathloss_model;
+	string filename("simulation-test-topology-simple.xml");
+
     try {
         int numnodes;
 		int port;
@@ -74,7 +80,34 @@ int main(int argc, char const* argv[])
 
 	// TBD: read the topology from an XML file
 
+	Simulation & sim = Simulation::get();
+
+	try {
+		sim.load("simulation-test-topology-simple.xml");
+	} catch (exception & e) {
+		cerr << "unable to load file " << filename
+			 << " " << e.what()
+			 << endl;
+	}
+
+
+
+
+
+	// instanciate the object appropriately
+	// sim.set_modulation(modulation_model);
+	// sim.set_pathloss_model(pathloss_model);
+
+	if (!sim.is_properly_configured(error_msg)) {
+		cerr << "simulation is not properly configured"
+			 << error_msg
+			 << endl;
+		exit(EXIT_FAILURE);
+	}
+
 	// TBD: start the asynchronous server
+
+	// wait for the program to be interrupted
 
     return 0;
 }

@@ -34,8 +34,9 @@ LogNormalShadowing::LogNormalShadowing(double d0,
 									   double shadowing_deviation,
 									   double path_loss_d0,
 									   double background_noise,
-									   boost::mt19937 randomness):
+									   boost::mt19937 & randomness):
 									   randvar(0.0, shadowing_deviation), X_sigma(randomness, randvar) {
+	this->set_name("Log-Normal Shadowing -- unspecified");
 	this->d0 = d0;
 	this->path_loss = path_loss;
 	this->shadowing_deviation = shadowing_deviation;
@@ -49,7 +50,7 @@ LogNormalShadowing::LogNormalShadowing(const std::string& name,
 									   double shadowing_deviation,
 									   double path_loss_d0,
 									   double background_noise,
-									   boost::mt19937 randomness):
+									   boost::mt19937 & randomness):
 									   randvar(0.0, shadowing_deviation), X_sigma(randomness, randvar) {
 	this->set_name(name);
 	this->d0 = d0;
@@ -57,13 +58,4 @@ LogNormalShadowing::LogNormalShadowing(const std::string& name,
 	this->shadowing_deviation = shadowing_deviation;
 	this->path_loss_d0 = path_loss_d0;
 	this->background_noise = background_noise;
-}
-
-bool LogNormalShadowing::receivePacket(Node<> & sender,
-	   								   Node<> & receiver,
-									   const std::string & msg,
-									   Modulation modscheme) {
-	// compute the SNR at the receiver
-	// apply the BER model to determine if the packets can be received
-	return true;
 }
