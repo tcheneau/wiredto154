@@ -1,3 +1,6 @@
-network_lib = Library("network", Split("server.cpp"), LIBS=["pthread", "boost_system-mt"])
+Import('models_lib')
+
+network_lib = StaticLibrary("network", Split("server.cpp"), LIBS=[ models_lib, "pthread", "boost_system-mt" ])
+
 Export('network_lib')
 Default(network_lib)

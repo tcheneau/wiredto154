@@ -1,15 +1,14 @@
 import os
 
-models_lib = Library("models", Split("coordinate.cpp pathlossmodel.cpp modulation.cpp IEEE802154.cpp"))
+models_lib = StaticLibrary("models", Split("coordinate.cpp pathlossmodel.cpp modulation.cpp IEEE802154.cpp"))
 Export('models_lib')
 
 env_boost = Environment()
 boost_prefix = "/usr"
-libs = [ ]
 
 sources = [ "test-suite.cpp" ]
 env_boost.Append(CPPPATH = [os.path.join(boost_prefix, "include")])
 env_boost.Append(LIBPATH = [os.path.join(boost_prefix, "lib")])
-app = env_boost.Program(target = "test-suite", source = sources, LIBS = libs + models_lib, LIBPATH = ".")
+app = env_boost.Program(target = "test-suite", source = sources, LIBS = models_lib)
 env_boost.Default(app)
 

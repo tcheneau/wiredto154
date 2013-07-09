@@ -16,6 +16,8 @@ app = env_test.Program(source = "coordinate-test.cpp", LIBS = libs, LIBPATH = [ 
 app2 = env_test.Program(source = "IEEE802154-test.cpp", LIBS = libs, LIBPATH = [ "../models" ])
 app3 = env_test.Program(source = "simulation-test.cpp", 
 		CPPPATH=["../core", "../models", "../network"],
-		LIBS = libs + [ core_lib, network_lib ] + ["pugixml"] + ["pthread", "boost_system-mt"])
+		LIBS = libs + [ core_lib, network_lib ] + ["pugixml"] + ["pthread", "boost_system-mt"],
+		# the following line is a workaround to solve circular dependencies issues when linking the program
+		LINKFLAGS = "-Wl,-\(")
 env_test.Default([app, app2, app3])
 
