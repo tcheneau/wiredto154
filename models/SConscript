@@ -1,14 +1,17 @@
 import os
 
+Import('env')
+local_env = env.Clone()
+
 models_lib = StaticLibrary("models", Split("coordinate.cpp pathlossmodel.cpp modulation.cpp IEEE802154.cpp"))
 Export('models_lib')
 
-env_boost = Environment()
+local_env = Environment()
 boost_prefix = "/usr"
 
 sources = [ "test-suite.cpp" ]
-env_boost.Append(CPPPATH = [os.path.join(boost_prefix, "include")])
-env_boost.Append(LIBPATH = [os.path.join(boost_prefix, "lib")])
-app = env_boost.Program(target = "test-suite", source = sources, LIBS = models_lib)
-env_boost.Default(app)
+local_env.Append(CPPPATH = [os.path.join(boost_prefix, "include")])
+local_env.Append(LIBPATH = [os.path.join(boost_prefix, "lib")])
+app = local_env.Program(target = "test-suite", source = sources, LIBS = models_lib)
+local_env.Default(app)
 

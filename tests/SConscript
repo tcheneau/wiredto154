@@ -1,23 +1,27 @@
 import os
 
-env_test = Environment()
+Import('env')
+local_env = env.Clone()
 
 Import('models_lib')
 Import('core_lib')
 Import('network_lib')
 
+
+# Boost related
 boost_prefix = "/usr"
 libs = [ 'boost_unit_test_framework', models_lib ]
+local_env.Append(CPPPATH = [os.path.join(boost_prefix, "include")])
+local_env.Append(LIBPATH = [os.path.join(boost_prefix, "lib")])
 
-env_test.Append(CPPPATH = [os.path.join(boost_prefix, "include")])
-env_test.Append(CPPPATH= "../models")
-env_test.Append(LIBPATH = [os.path.join(boost_prefix, "lib")])
-app = env_test.Program(source = "coordinate-test.cpp", LIBS = libs, LIBPATH = [ "../models" ])
-app2 = env_test.Program(source = "IEEE802154-test.cpp", LIBS = libs, LIBPATH = [ "../models" ])
-app3 = env_test.Program(source = "simulation-test.cpp", 
+local_env.Append(CPPPATH= "../models")
+
+app = local_env.Program(source = "coordinate-test.cpp", LIBS = libs, LIBPATH = [ "../models" ])
+app2 = local_env.Program(source = "IEEE802154-test.cpp", LIBS = libs, LIBPATH = [ "../models" ])
+app3 = local_env.Program(source = "simulation-test.cpp", 
 		CPPPATH=["../core", "../models", "../network"],
 		LIBS = libs + [ core_lib, network_lib ] + ["pugixml"] + ["pthread", "boost_system-mt"],
 		# the following line is a workaround to solve circular dependencies issues when linking the program
 		LINKFLAGS = "-Wl,-\(")
-env_test.Default([app, app2, app3])
+local_env.Default([app, app2, app3])
 

@@ -1,8 +1,26 @@
 import os
 
-env = Environment()
 boost_prefix = "/usr"
 libs = [ 'boost_program_options', 'pthread', 'boost_system-mt', 'pugixml' ]
+
+release_mode = ARGUMENTS.get("mode", "release")
+
+if not (release_mode in [ "release", "debug" ]):
+    print "mode should be set to release or debug"
+    Exit(1)
+
+releasecflags = [ "-O3" ]
+debugcflags = [ "-O0", "-g", "-DDEBUG" ]
+
+if release_mode == "release":
+    cflags = releasecflags
+else:
+    cflags = debugcflags
+
+env = Environment()
+env.Append(CCFLAGS = cflags)
+
+Export('env')
 
 SConscript('models/SConscript')
 SConscript('network/SConscript')
