@@ -4,7 +4,7 @@
 * This software was developed by employees of the National Institute of
 * Standards and Technology (NIST), and others.
 * This software has been contributed to the public domain.
-* Pursuant to title 15 Untied States Code Section 105, works of NIST
+* Pursuant to title 15 United States Code Section 105, works of NIST
 * employees are not subject to copyright protection in the United States
 * and are considered to be in the public domain.
 * As a result, a formal license is not needed to use this software.
@@ -24,6 +24,7 @@
 #include "core/simulation.hpp"
 
 #include <cstdlib>
+#include <cstring>
 #include <iostream>
 #include <boost/program_options.hpp>
 namespace po = boost::program_options;
@@ -32,31 +33,20 @@ using namespace std;
 int main(int argc, char const* argv[])
 {
 	string error_msg;
-	string modulation_model;
-	string pathloss_model;
-	string filename("simulation-test-topology-simple.xml");
+	string simulation_file;
+	// Modulation::Modulation & modulation_model;
+	// PathLossModel::PathLossModel & pathloss_model;
 
     try {
-        int numnodes;
-		int port;
         po::options_description desc("Allowed options");
         desc.add_options()
-            ("help", "produce help message")
-            ("numnodes,n", po::value<int>(&numnodes)->default_value(100),
-                  "number of nodes that can participate in the simulation")
-            ("verbose,v", po::value<int>()->implicit_value(1),
-                  "enable verbosity (optionally specify level)")
-            ("listen,l", po::value<int>(&port)->implicit_value(10000)
-                  ->default_value(0,"no"),
-                  "listen on a port.")
+            ("help", "produce this help message")
+			("simulation,s", po::value<string>(&simulation_file), "XML file that describes the simulation")
         ;
-
-        po::positional_options_description p;
-        p.add("input-file", -1);
 
         po::variables_map vm;
         po::store(po::command_line_parser(argc, const_cast<char **>(argv)).
-                  options(desc).positional(p).run(), vm);
+                  options(desc).run(), vm);
         po::notify(vm);
 
         if (vm.count("help")) {
@@ -65,16 +55,15 @@ int main(int argc, char const* argv[])
             return 0;
         }
 
-        if (vm.count("verbose")) {
-            cout << "Verbosity enabled.  Level is " << vm["verbose"].as<int>()
-                 << "\n";
+        if (!vm.count("simulation")) {
+			cerr << "\"simulation\" argument is mandatory" << endl;
+			cout << desc;
+			return 0;
         }
-
-        cout << "Listen port is " << port << "\n";
     }
     catch(std::exception& e)
     {
-        cout << e.what() << "\n";
+        cerr << e.what() << "\n";
         return 1;
     }
 
@@ -83,11 +72,13 @@ int main(int argc, char const* argv[])
 	Simulation & sim = Simulation::get();
 
 	try {
-		sim.load("simulation-test-topology-simple.xml");
-	} catch (exception & e) {
-		cerr << "unable to load file " << filename
-			 << " " << e.what()
-			 << endl;
+		sim.load(simulation_file.c_str());
+	} catch (Simulation::exception_on_simulation_loading & e) {
+		cerr << "unable to load file " << simulation_file;
+		if (strlen(e.what()))
+			cerr << " (" << e.what() << ")";
+		cerr << endl;
+		return 1;
 	}
 
 
@@ -99,7 +90,7 @@ int main(int argc, char const* argv[])
 	// sim.set_pathloss_model(pathloss_model);
 
 	if (!sim.is_properly_configured(error_msg)) {
-		cerr << "simulation is not properly configured"
+		cerr << "simulation is not properly configured: "
 			 << error_msg
 			 << endl;
 		exit(EXIT_FAILURE);

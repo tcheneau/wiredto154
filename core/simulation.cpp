@@ -2,6 +2,7 @@
 
 #include <pugixml.hpp>
 
+
 Simulation::rng Simulation::randomness;
 
 Simulation & Simulation::get(void) {
@@ -22,8 +23,10 @@ void Simulation::load(const std::string & filename) {
 	pugi::xml_parse_result result = doc.load_file(filename.c_str());
 	pugi::xml_node xml_nodes;
 
-	if (!result)
-		throw result.description();
+	if (!result) {
+		std::cerr << "Error description: " << result.description() << "\n";
+		throw exception_on_simulation_loading();
+	}
 
 	nodes.clear();
 	servers.clear();

@@ -9,6 +9,7 @@
 
 #include <boost/asio.hpp>
 #include <boost/random/mersenne_twister.hpp>
+#include <exception>
 #include <map>
 #include <string>
 
@@ -26,6 +27,10 @@ class Simulation {
 		bool receivePacket(Node<> & sender,
 						   Node<> & receiver,
 						   const std::string & msg);
+
+		struct exception_on_simulation_loading: std::exception {
+			char const * what() const throw() { return ""; };
+		};
 	private:
 		bool initialized;
 		void init(void);
@@ -34,6 +39,8 @@ class Simulation {
 		boost::shared_ptr<Modulation> modulation;
 		Server::server_list servers;
 		Simulation () { randomness(); initialized = false; }
+
 };
+
 
 #endif /* WIREDTO154_MODELS_SIMULATION_H */
