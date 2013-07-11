@@ -4,8 +4,11 @@ void PathLossModel::init(void) {
 	// initialize a hash table that will store all the defined Path Loss Model
 }
 
-void PathLossModel::register_model(PathLossModel& model) {
-	// add an entry to the hash table
+void PathLossModel::register_model(const std::string & name,
+								   pathloss_ptr model) {
+	if (available_pathloss.count(name))
+		throw PathLossAlreadyExistsException();
+	available_pathloss[name] = model;
 }
 
 void PathLossModel::set_name(const std::string& name) {

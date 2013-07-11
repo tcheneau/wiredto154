@@ -15,7 +15,10 @@ Simulation & Simulation::get(void) {
 
 void Simulation::init(void) {
 	this->initialized = true;
-	// TBD: initialisation code
+
+	/* all models need to be initialized here */
+	Modulation::init();
+	Phy_IEEE802154_OQPSK::init();
 }
 
 void Simulation::load(const std::string & filename) {
@@ -85,6 +88,10 @@ bool Simulation::receivePacket(Node <> & sender,
 	// compute the SNR at the receiver
 	// apply the BER model to determine if the packets can be received
 	return true;
+}
+
+void Simulation::set_modulation(std::string & modname) {
+	modulation = Modulation::lookup_modulation(modname);
 }
 
 bool Simulation::is_properly_configured(std::string & error_msg) {

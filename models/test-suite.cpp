@@ -20,7 +20,7 @@ int main(int argc, char const* argv[])
 	double result = Phy_IEEE802154_OQPSK::compute_BER(10);
 	string str = boost::lexical_cast<string>(result);
 	cout << str << endl;
-	cout << Phy_IEEE802154_OQPSK::modulation << endl;
+	cout << Phy_IEEE802154_OQPSK::name << endl;
 
 	print_separator();
 	cout << "Node tests " << endl;

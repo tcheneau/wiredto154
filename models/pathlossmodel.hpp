@@ -6,24 +6,35 @@
 #include "modulation.hpp"
 #include "node.hpp"
 
-#include <string>
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/normal_distribution.hpp>
 #include <boost/random/variate_generator.hpp>
+#include <exception>
+#include <map>
+#include <string>
 
 
 class PathLossModel {
-	std::string name;
 	public:
-	virtual const std::string & get_model_name(void) = 0;
-	virtual bool receivePacket(Node<> & sender,
-			Node<> & receiver,
-			const std::string & msg,
-			Modulation modscheme)=0;
-	virtual double compute_SINR(Node<> & sender, Node<> & receiver) throw(ModelException) = 0;
-	void init(void);
-	void register_model(PathLossModel& model);
-	void set_name(const std::string& name);
+		typedef boost::shared_ptr<PathLossModel> pathloss_ptr;
+		struct PathLossNotFoundException: std::exception {};
+		struct PathLossAlreadyExistsException: std::exception {};
+	private:
+		static std::map<std::string, pathloss_ptr> available_pathloss;
+		std::string model_name;
+		std::string name;
+		std::string description;
+	public:
+		virtual const std::string & get_model_name(void) = 0;
+		virtual bool receivePacket(Node<> & sender,
+				Node<> & receiver,
+				const std::string & msg,
+				Modulation modscheme)=0;
+		virtual double compute_SINR(Node<> & sender, Node<> & receiver) throw(ModelException) = 0;
+		void init(void);
+		void register_model(const std::string & name, pathloss_ptr model);
+		pathloss_ptr lookup_pathloss(const std::string & name);
+		void set_name(const std::string& name);
 };
 
 

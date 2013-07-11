@@ -34,15 +34,23 @@ int main(int argc, char const* argv[])
 {
 	string error_msg;
 	string simulation_file;
-	// Modulation::Modulation & modulation_model;
-	// PathLossModel::PathLossModel & pathloss_model;
+	string modulation;
+	string pathloss;
+
+	Simulation & sim = Simulation::get();
 
     try {
         po::options_description desc("Allowed options");
         desc.add_options()
             ("help", "produce this help message")
+			("list-modulation", "list available modulation schemes")
+			("list-pathloss", "list available pathloss models")
+			("modulation", po::value<string>(&modulation)->default_value("O-QPSK"), "modulation scheme")
+			("pathloss", po::value<string>(&pathloss)->default_value("Shadow-NIST-unverif"), "path loss model for the simulation")
 			("simulation,s", po::value<string>(&simulation_file), "XML file that describes the simulation")
         ;
+
+		/* TODO add a flag that lists available pathloss and modulation schemes */
 
         po::variables_map vm;
         po::store(po::command_line_parser(argc, const_cast<char **>(argv)).
@@ -54,6 +62,16 @@ int main(int argc, char const* argv[])
             cout << desc;
             return 0;
         }
+
+        if (vm.count("list-modulation")) {
+			vector<string> modulations = Modulation::list_available_modulation();
+			cout << "List of available modulation schemes" << endl;
+			for(vector<string>::const_iterator i = modulations.begin(); i != modulations.end(); ++i)
+				cout << *i << endl;
+            return 0;
+        }
+
+		// TBD: pick a default modulation when non is provided
 
         if (!vm.count("simulation")) {
 			cerr << "\"simulation\" argument is mandatory" << endl;
@@ -68,8 +86,6 @@ int main(int argc, char const* argv[])
     }
 
 	// TBD: read the topology from an XML file
-
-	Simulation & sim = Simulation::get();
 
 	try {
 		sim.load(simulation_file.c_str());
