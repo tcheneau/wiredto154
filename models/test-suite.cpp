@@ -17,10 +17,11 @@ static inline void print_separator(void) {
 
 int main(int argc, char const* argv[])
 {
-	double result = Phy_IEEE802154_OQPSK::compute_BER(10);
+	Phy_IEEE802154_OQPSK modulation;
+	double result = modulation.compute_BER(10);
 	string str = boost::lexical_cast<string>(result);
 	cout << str << endl;
-	cout << Phy_IEEE802154_OQPSK::name << endl;
+	cout << modulation.get_name() << endl;
 
 	print_separator();
 	cout << "Node tests " << endl;
@@ -54,7 +55,7 @@ int main(int argc, char const* argv[])
 
 	for (std::vector<float>::iterator it = ber_vect.begin(); it != ber_vect.end(); ++it)
 		cout << "bit error rate at " << *it << "db: "
-			 << boost::lexical_cast<string>(Phy_IEEE802154_OQPSK::compute_BER(*it))
+			 << boost::lexical_cast<string>(modulation.compute_BER(*it))
 			 << endl;
 
 	print_separator();

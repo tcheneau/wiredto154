@@ -26,10 +26,6 @@ class PathLossModel {
 		std::string description;
 	public:
 		virtual const std::string & get_model_name(void) = 0;
-		virtual bool receivePacket(Node<> & sender,
-				Node<> & receiver,
-				const std::string & msg,
-				Modulation modscheme)=0;
 		virtual double compute_SINR(Node<> & sender, Node<> & receiver) throw(ModelException) = 0;
 		void init(void);
 		void register_model(const std::string & name, pathloss_ptr model);

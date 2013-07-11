@@ -65,7 +65,7 @@ int main(int argc, char const* argv[])
 
         if (vm.count("list-modulation")) {
 			vector<string> modulations = Modulation::list_available_modulation();
-			cout << "List of available modulation schemes" << endl;
+			cout << "List of available modulation schemes:" << endl;
 			for(vector<string>::const_iterator i = modulations.begin(); i != modulations.end(); ++i)
 				cout << *i << endl;
             return 0;

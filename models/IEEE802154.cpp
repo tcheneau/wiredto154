@@ -2,9 +2,6 @@
 #include <cmath>
 #include <boost/math/special_functions/binomial.hpp>
 
-const std::string Phy_IEEE802154_OQPSK::name = "O-QPSK";
-const std::string Phy_IEEE802154_OQPSK::description = "defined in IEEE 802.15.4-2006, pages 267-269";
-
 double Phy_IEEE802154_OQPSK::compute_BER(double sinr) {
 	double sum = 0;
 

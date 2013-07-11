@@ -5,7 +5,8 @@
 #include "IEEE802154.hpp"
 
 BOOST_AUTO_TEST_CASE( test ) {
-	BOOST_CHECK_EQUAL(Phy_IEEE802154_OQPSK::compute_BER(0), 0.5);
-	BOOST_CHECK_EQUAL(Phy_IEEE802154_OQPSK::name, "O-QPSK");
+	Phy_IEEE802154_OQPSK modulation;
+	BOOST_CHECK_EQUAL(modulation.compute_BER(0), 0.5);
+	BOOST_CHECK_EQUAL(modulation.get_name(), "O-QPSK");
 
 }

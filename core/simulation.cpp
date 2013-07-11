@@ -17,8 +17,7 @@ void Simulation::init(void) {
 	this->initialized = true;
 
 	/* all models need to be initialized here */
-	Modulation::init();
-	Phy_IEEE802154_OQPSK::init();
+	Modulation::register_modulation(Modulation::modulation_ptr(new Phy_IEEE802154_OQPSK()));
 }
 
 void Simulation::load(const std::string & filename) {
