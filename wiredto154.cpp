@@ -45,8 +45,8 @@ int main(int argc, char const* argv[])
             ("help", "produce this help message")
 			("list-modulation", "list available modulation schemes")
 			("list-pathloss", "list available pathloss models")
-			("modulation", po::value<string>(&modulation)->default_value("O-QPSK"), "modulation scheme")
-			("pathloss", po::value<string>(&pathloss)->default_value("Shadow-NIST-unverif"), "path loss model for the simulation")
+			("modulation", po::value<string>(&modulation), "modulation scheme")
+			("pathloss", po::value<string>(&pathloss), "path loss model for the simulation")
 			("simulation,s", po::value<string>(&simulation_file), "XML file that describes the simulation")
         ;
 
@@ -77,7 +77,23 @@ int main(int argc, char const* argv[])
             return 0;
         }
 
-		// TBD: pick a default modulation when non is provided
+		if (vm.count("pathloss")) {
+			sim.set_pathloss_model(pathloss);
+		}
+		else {
+			cerr << "no path loss model selected, you need to choose one using the --pathloss selector" << endl
+				 << "for the list of path loss model, try --list-pathloss" << endl;
+			exit(EXIT_FAILURE);
+		}
+
+		if (vm.count("modulation")) {
+			sim.set_modulation(modulation);
+		}
+		else {
+			std::string default_mod("O-QPSK");
+			cout << "setting default modulation to " << default_mod << endl;
+			sim.set_modulation(default_mod);
+		}
 
         if (!vm.count("simulation")) {
 			cerr << "\"simulation\" argument is mandatory" << endl;

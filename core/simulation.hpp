@@ -22,7 +22,7 @@ class Simulation {
 		static Simulation & get(void);
 		void set_seed(int seed) { randomness.seed(seed); }
 		void set_modulation(std::string & modname);
-		void set_pathloss_model(PathLossModel & pathloss) {}
+		void set_pathloss_model(std::string & model);
 		std::map<int, Node<>::node_ptr> nodes;
 		bool is_properly_configured(std::string & error_msg);
 		bool receivePacket(Node<> & sender,

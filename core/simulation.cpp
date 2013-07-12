@@ -1,5 +1,6 @@
 #include "simulation.hpp"
 
+#include <cstdlib>
 #include <pugixml.hpp>
 
 
@@ -162,7 +163,21 @@ bool Simulation::receivePacket(Node <> & sender,
 }
 
 void Simulation::set_modulation(std::string & modname) {
-	modulation = Modulation::lookup_modulation(modname);
+	try{
+		this->modulation = Modulation::lookup_modulation(modname);
+	} catch (Modulation::ModulationNotFoundException & e) {
+		std::cerr << "unable to find modulation scheme " << modname << std::endl;
+		std::exit(EXIT_FAILURE);
+	}
+}
+
+void Simulation::set_pathloss_model(std::string & model) {
+	try{
+		 this->pathloss = PathLossModel::lookup_pathloss(model);
+	} catch (PathLossModel::PathLossNotFoundException & e) {
+		std::cerr << "unable to find path loss model " << model << std::endl;
+		std::exit(EXIT_FAILURE);
+	}
 }
 
 bool Simulation::is_properly_configured(std::string & error_msg) {
