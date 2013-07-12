@@ -60,11 +60,11 @@ Node<Coord>::Node(int id,
 
 template<typename Coord>
 std::ostream & operator<< (std::ostream & os, const Node<Coord> & node) {
-	os << "coordinate:" << std::endl << node.coordinate << std::endl
-	   << "txPower:" << node.txPower << std::endl
-	   << "rxSensitivity" << node.rxSensitivity << std::endl
-	   << "type" << node.type << std::endl
-	   << "description:" << node.description;
+	os << "coordinate: " << std::endl << node.coordinate << std::endl
+	   << "txPower: " << node.txPower << std::endl
+	   << "rxSensitivity: " << node.rxSensitivity << std::endl
+	   << "type: " << node.type << std::endl
+	   << "description: " << node.description;
 	return os;
 }
 
