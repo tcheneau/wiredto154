@@ -18,6 +18,78 @@ void Simulation::init(void) {
 
 	/* all models need to be initialized here */
 	Modulation::register_modulation(Modulation::modulation_ptr(new Phy_IEEE802154_OQPSK()));
+
+	std::string description_500kVSub_LOS =
+		"500kV Substation (LOS), from the article 'Opportunities and Challenges of Wireless Sensor Networks in Smart Grid'";
+	std::string description_500kVSub_NLOS =
+		"500kV Substation (NLOS), from the article 'Opportunities and Challenges of Wireless Sensor Networks in Smart Grid'";
+	std::string description_UTV_LOS =
+		"Underground Transformer Vault (LOS), from the article 'Opportunities and Challenges of Wireless Sensor Networks in Smart Grid'";
+	std::string description_UTV_NLOS =
+		"Underground Transformer Vault (NLOS), from the article 'Opportunities and Challenges of Wireless Sensor Networks in Smart Grid'";
+	std::string description_MPR_LOS =
+		"Main Power Room (LOS), from the article 'Opportunities and Challenges of Wireless Sensor Networks in Smart Grid'";
+	std::string description_MPR_NLOS =
+		"Main Power Room (NLOS), from the article 'Opportunities and Challenges of Wireless Sensor Networks in Smart Grid'";
+
+
+
+	/* data extracted from "Opportunities and Challenges of Wireless Sensor Networks in Smart Grid", Gungor et al. */
+	PathLossModel::register_model(PathLossModel::pathloss_ptr(
+									new LogNormalShadowing("500kVSub-LOS",
+														   description_500kVSub_LOS,
+														   1, /* d0 -- reference distance */
+														   2.42, /* path loss parameter (eta) */
+														   3.12, /* shadowing deviation (sigma) */
+														   55, /* path loss at d0 */
+														   -90, /* background noise */
+														   randomness /* randomness source */)));
+	PathLossModel::register_model(PathLossModel::pathloss_ptr(
+									new LogNormalShadowing("500kVSub-NLOS",
+														   description_500kVSub_NLOS,
+														   1, /* d0 -- reference distance */
+														   3.51, /* path loss parameter (eta) */
+														   2.95, /* shadowing deviation (sigma) */
+														   55, /* path loss at d0 */
+														   -90, /* background noise */
+														   randomness /* randomness source */)));
+	PathLossModel::register_model(PathLossModel::pathloss_ptr(
+									new LogNormalShadowing("UTV-LOS",
+														   description_UTV_LOS,
+														   1, /* d0 -- reference distance */
+														   1.45, /* path loss parameter (eta) */
+														   2.45, /* shadowing deviation (sigma) */
+														   55, /* path loss at d0 */
+														   -90, /* background noise */
+														   randomness /* randomness source */)));
+	PathLossModel::register_model(PathLossModel::pathloss_ptr(
+									new LogNormalShadowing("UTV-NLOS",
+														   description_UTV_NLOS,
+														   1, /* d0 -- reference distance */
+														   3.15, /* path loss parameter (eta) */
+														   3.19, /* shadowing deviation (sigma) */
+														   55, /* path loss at d0 */
+														   -90, /* background noise */
+														   randomness /* randomness source */)));
+	PathLossModel::register_model(PathLossModel::pathloss_ptr(
+									new LogNormalShadowing("MPR-LOS",
+														   description_MPR_LOS,
+														   1, /* d0 -- reference distance */
+														   1.64, /* path loss parameter (eta) */
+														   3.29, /* shadowing deviation (sigma) */
+														   55, /* path loss at d0 */
+														   -90, /* background noise */
+														   randomness /* randomness source */)));
+	PathLossModel::register_model(PathLossModel::pathloss_ptr(
+									new LogNormalShadowing("MPR-NLOS",
+														   description_MPR_NLOS,
+														   1, /* d0 -- reference distance */
+														   2.38, /* path loss parameter (eta) */
+														   2.25, /* shadowing deviation (sigma) */
+														   55, /* path loss at d0 */
+														   -90, /* background noise */
+														   randomness /* randomness source */)));
+
 }
 
 void Simulation::load(const std::string & filename) {

@@ -40,7 +40,6 @@ class Simulation {
 		Modulation::modulation_ptr modulation;
 		Server::server_list servers;
 		Simulation () { randomness(); initialized = false; }
-
 };
 
 

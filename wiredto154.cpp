@@ -50,8 +50,6 @@ int main(int argc, char const* argv[])
 			("simulation,s", po::value<string>(&simulation_file), "XML file that describes the simulation")
         ;
 
-		/* TODO add a flag that lists available pathloss and modulation schemes */
-
         po::variables_map vm;
         po::store(po::command_line_parser(argc, const_cast<char **>(argv)).
                   options(desc).run(), vm);
@@ -67,6 +65,14 @@ int main(int argc, char const* argv[])
 			vector<string> modulations = Modulation::list_available_modulation();
 			cout << "List of available modulation schemes:" << endl;
 			for(vector<string>::const_iterator i = modulations.begin(); i != modulations.end(); ++i)
+				cout << *i << endl;
+            return 0;
+        }
+
+        if (vm.count("list-pathloss")) {
+			vector<string> pathlossmodels = PathLossModel::list_available_model();
+			cout << "List of available path loss models:" << endl;
+			for(vector<string>::const_iterator i = pathlossmodels.begin(); i != pathlossmodels.end(); ++i)
 				cout << *i << endl;
             return 0;
         }
