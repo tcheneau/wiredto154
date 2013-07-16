@@ -2,6 +2,7 @@
 
 #include <cstdlib>
 #include <ctime>
+#include <sstream>
 #include <pugixml.hpp>
 
 Simulation::rng Simulation::randomness(static_cast<unsigned int>(std::time(0)));
@@ -153,12 +154,12 @@ void Simulation::load(const std::string & filename) {
 	// start a server on each ports
 }
 
-bool Simulation::receivePacket(Node <> & sender,
-							   Node <> & receiver,
+bool Simulation::receivePacket(Node<>::node_ptr sender,
+                               Node<>::node_ptr receiver,
 							   const std::string & msg) {
 	// compute the SNR at the receiver
 	// apply the BER model to determine if the packets can be received
-	// add the PHY preamble, or some other PHY header?
+    // TODO: add the PHY preamble, or some other PHY header to the BERcomputation
 
 	double sinr = pathloss->compute_SINR(sender, receiver);
 	double per = modulation->compute_PER(sinr, msg.size());
@@ -167,6 +168,17 @@ bool Simulation::receivePacket(Node <> & sender,
 		return false;
 	else
 		return true;
+}
+
+std::string Simulation::list_nodes()
+{
+	std::ostringstream nodes_list;
+	for(std::map<int, Node<>::node_ptr>::const_iterator i = nodes.begin();  i != nodes.end(); ++i) {
+		nodes_list << std::string("on port ") << i->first << std::endl;
+		nodes_list << * i->second << std::endl;
+
+	}
+	return nodes_list.str();
 }
 
 void Simulation::set_modulation(std::string & modname) {

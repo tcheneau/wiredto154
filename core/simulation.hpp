@@ -29,13 +29,14 @@ class Simulation {
 		void set_modulation(std::string & modname);
 		void set_pathloss_model(std::string & model);
 		std::map<int, Node<>::node_ptr> nodes;
+		std::string list_nodes(void);
 		bool is_properly_configured(std::string & error_msg);
-		bool receivePacket(Node<> & sender,
-						   Node<> & receiver,
-						   const std::string & msg);
+        bool receivePacket(Node<>::node_ptr sender,
+                           Node<>::node_ptr receiver,
+                           const std::string & msg);
 
 		struct exception_on_simulation_loading: std::exception {
-			char const * what() const throw() { return ""; };
+            char const * what() const throw() { return ""; }
 		};
 	private:
 		bool initialized;

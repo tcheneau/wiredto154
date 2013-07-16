@@ -33,7 +33,7 @@ class Node {
 			 float rxSensitivity,
 			 const std::string & description,
 			 const std::string & type);
-		float distance(Node<Coord> & other) { return coordinate.distance(&other.coordinate); }
+		float distance(Node<Coord> other) { return coordinate.distance(&other.coordinate); }
 		float get_txPower(void) { return txPower; }
 		float get_rxSensitivity(void) { return rxSensitivity; }
 		int get_id(void) const { return id; }

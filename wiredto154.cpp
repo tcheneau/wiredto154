@@ -107,8 +107,7 @@ int main(int argc, char const* argv[])
         return 1;
     }
 
-	// TBD: read the topology from an XML file
-
+	// read the topology from an XML file
 	try {
 		sim.load(simulation_file.c_str());
 	} catch (Simulation::exception_on_simulation_loading & e) {
@@ -118,14 +117,6 @@ int main(int argc, char const* argv[])
 		cerr << endl;
 		return 1;
 	}
-
-
-
-
-
-	// instanciate the object appropriately
-	// sim.set_modulation(modulation_model);
-	// sim.set_pathloss_model(pathloss_model);
 
 	if (!sim.is_properly_configured(error_msg)) {
 		cerr << "simulation is not properly configured: "

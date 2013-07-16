@@ -29,7 +29,7 @@ class PathLossModel {
 		PathLossModel(const std::string & name): model_name(name) {}
 	public:
 		virtual const std::string & get_model_name(void) = 0;
-		virtual double compute_SINR(Node<> & sender, Node<> & receiver) throw(ModelException) = 0;
+        virtual double compute_SINR(Node<>::node_ptr sender, Node<>::node_ptr receiver) throw(ModelException) = 0;
 		virtual const std::string& get_model_name(void) const { return model_name; }
 		virtual const std::string& get_name(void) const { return name; }
 		virtual const std::string& get_description(void) const { return description; }
@@ -62,7 +62,7 @@ class LogNormalShadowing: public PathLossModel {
 					   double background_noise,
 					   boost::mt19937 & randomness);
 	virtual const std::string & get_model_name(void);
-	virtual double compute_SINR(Node<> & sender, Node<> & receiver) throw(ModelException);
+    virtual double compute_SINR(Node<>::node_ptr sender, Node<>::node_ptr receiver) throw(ModelException);
 };
 
 #endif /* WIREDTO154_MODELS_PATHLOSSMODEL_H */
