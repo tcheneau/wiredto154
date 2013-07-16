@@ -27,6 +27,7 @@
 #include <cstring>
 #include <iostream>
 #include <boost/program_options.hpp>
+
 namespace po = boost::program_options;
 using namespace std;
 
@@ -38,7 +39,6 @@ int main(int argc, char const* argv[])
 	string pathloss;
 
 	Simulation & sim = Simulation::get();
-
     try {
         po::options_description desc("Allowed options");
         desc.add_options()

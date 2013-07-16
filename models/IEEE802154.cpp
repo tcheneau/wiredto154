@@ -11,7 +11,8 @@ double Phy_IEEE802154_OQPSK::compute_BER(double sinr) {
 	return 8./15 * 1./16 * sum;
 }
 
+/* packet len is in byte */
 double Phy_IEEE802154_OQPSK::compute_PER(double sinr, int packetlen) {
-	return 1. -  pow(1. - compute_BER(sinr), packetlen);
+	return 1. -  pow(1. - compute_BER(sinr), 8 * packetlen);
 }
 

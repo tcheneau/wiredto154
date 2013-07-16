@@ -10,6 +10,9 @@
 
 #include <boost/asio.hpp>
 #include <boost/random/mersenne_twister.hpp>
+#include <boost/random/uniform_real.hpp>
+#include <boost/random/variate_generator.hpp>
+#include <boost/shared_ptr.hpp>
 #include <exception>
 #include <map>
 #include <string>
@@ -17,6 +20,8 @@
 class Simulation {
 	public:
 		typedef boost::mt19937 rng;
+		typedef boost::uniform_real<double> uniform_dist;
+		typedef boost::variate_generator<rng &, uniform_dist> vargen;
 		static rng randomness;
 		void load(const std::string & filename);
 		static Simulation & get(void);
@@ -35,11 +40,15 @@ class Simulation {
 	private:
 		bool initialized;
 		void init(void);
+		uniform_dist randvar;
+		boost::shared_ptr<vargen> randgen;
 		boost::asio::io_service io_service;
 		boost::shared_ptr<PathLossModel> pathloss;
 		Modulation::modulation_ptr modulation;
 		Server::server_list servers;
-		Simulation () { randomness(); initialized = false; }
+		Simulation (): randvar(0.0, 1.0) {
+			randgen = boost::shared_ptr<vargen>(new vargen(randomness, randvar));
+			initialized = false; }
 };
 
 

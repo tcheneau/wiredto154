@@ -1,17 +1,16 @@
 #include "simulation.hpp"
 
 #include <cstdlib>
+#include <ctime>
 #include <pugixml.hpp>
 
-
-Simulation::rng Simulation::randomness;
+Simulation::rng Simulation::randomness(static_cast<unsigned int>(std::time(0)));
 
 Simulation & Simulation::get(void) {
 	static Simulation sim;
 	if (!sim.initialized)
 		sim.init();
 	return sim;
-
 }
 
 void Simulation::init(void) {
@@ -159,7 +158,15 @@ bool Simulation::receivePacket(Node <> & sender,
 							   const std::string & msg) {
 	// compute the SNR at the receiver
 	// apply the BER model to determine if the packets can be received
-	return true;
+	// add the PHY preamble, or some other PHY header?
+
+	double sinr = pathloss->compute_SINR(sender, receiver);
+	double per = modulation->compute_PER(sinr, msg.size());
+
+	if (per > (*randgen)())
+		return false;
+	else
+		return true;
 }
 
 void Simulation::set_modulation(std::string & modname) {
