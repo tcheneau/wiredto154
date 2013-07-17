@@ -162,6 +162,10 @@ bool Simulation::receivePacket(Node<>::node_ptr sender,
     // TODO: add the PHY preamble, or some other PHY header to the BERcomputation
 
 	double sinr = pathloss->compute_SINR(sender, receiver);
+
+	if (sender->get_txPower() - sinr < receiver->get_rxSensitivity())
+		return false; // the receiver does not even pick up the signal
+
 	double per = modulation->compute_PER(sinr, msg.size());
 
 	if (per > (*randgen)())
