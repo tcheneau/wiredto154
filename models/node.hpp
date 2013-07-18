@@ -10,6 +10,7 @@
 #include <boost/shared_ptr.hpp>
 #include <iostream>
 #include <list>
+#include <map>
 #include <string>
 
 template <typename Coord> class Node;
@@ -27,6 +28,8 @@ class Node {
 		float rxSensitivity;
 	public:
 		typedef boost::shared_ptr< Node<Coord> > node_ptr;
+		typedef std::list<node_ptr> node_list;
+		typedef std::map<int, node_ptr> node_map;
 		Node(int id,
 			 const Coord & coordinate,
 			 float txPower,
@@ -39,6 +42,7 @@ class Node {
 		int get_id(void) const { return id; }
 		const std::string & get_description(void) const { return description; }
 		const std::string & get_type(void) const { return type; }
+		bool operator==(Node<> & other) { return this->id == other.id;}
 		friend std::ostream & operator<< <> (std::ostream & os, const Node<Coord> & node);
 };
 

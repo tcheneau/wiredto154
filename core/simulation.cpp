@@ -154,7 +154,7 @@ void Simulation::load(const std::string & filename) {
 	// start a server on each ports
 }
 
-bool Simulation::receivePacket(Node<>::node_ptr sender,
+Simulation::reception_type Simulation::receivePacket(Node<>::node_ptr sender,
                                Node<>::node_ptr receiver,
 							   const std::string & msg) {
 	// compute the SNR at the receiver
@@ -164,14 +164,33 @@ bool Simulation::receivePacket(Node<>::node_ptr sender,
 	double sinr = pathloss->compute_SINR(sender, receiver);
 
 	if (sender->get_txPower() - sinr < receiver->get_rxSensitivity())
-		return false; // the receiver does not even pick up the signal
+		return PACKET_NOT_RECEIVED; // the receiver does not even pick up the signal
 
 	double per = modulation->compute_PER(sinr, msg.size());
 
 	if (per > (*randgen)())
-		return false;
+		return PACKET_CORRUPTED;
 	else
-		return true;
+		return PACKET_OK;
+}
+
+Simulation::reception_pair Simulation::whoReceivedPacket(Node<>::node_ptr sender, const std::string &msg) {
+	Node<>::node_list received_OK, received_garbage;
+
+	// go through the list of all neighbors
+	for (Node<>::node_map::const_iterator i = nodes.begin(); i != nodes.end(); ++i) {
+		if (i->second == sender) // skip the sending node
+			continue;
+		switch (receivePacket(sender, i->second, msg)) {
+			case PACKET_OK:
+				received_OK.push_back(i->second);
+				break;
+			case PACKET_CORRUPTED:
+				received_garbage.push_back(i->second);
+		}
+	}
+
+	return reception_pair(received_OK, received_garbage);
 }
 
 std::string Simulation::list_nodes()
