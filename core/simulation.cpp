@@ -156,7 +156,7 @@ void Simulation::load(const std::string & filename) {
 
 Simulation::reception_type Simulation::receivePacket(Node<>::node_ptr sender,
                                Node<>::node_ptr receiver,
-							   const std::string & msg) {
+							   const Frame::frame & msg) {
 	// compute the SNR at the receiver
 	// apply the BER model to determine if the packets can be received
     // TODO: add the PHY preamble, or some other PHY header to the BERcomputation
@@ -166,7 +166,7 @@ Simulation::reception_type Simulation::receivePacket(Node<>::node_ptr sender,
 	if (sender->get_txPower() - sinr < receiver->get_rxSensitivity())
 		return PACKET_NOT_RECEIVED; // the receiver does not even pick up the signal
 
-	double per = modulation->compute_PER(sinr, msg.size());
+	double per = modulation->compute_PER(sinr, msg.size() * sizeof(Frame::frame::value_type));
 
 	if (per > (*randgen)())
 		return PACKET_CORRUPTED;
@@ -174,7 +174,7 @@ Simulation::reception_type Simulation::receivePacket(Node<>::node_ptr sender,
 		return PACKET_OK;
 }
 
-Simulation::reception_pair Simulation::whoReceivedPacket(Node<>::node_ptr sender, const std::string &msg) {
+Simulation::reception_status Simulation::whoReceivedPacket(Node<>::node_ptr sender, const Frame::frame &msg) {
 	Node<>::node_list received_OK, received_garbage;
 
 	// go through the list of all neighbors
@@ -187,10 +187,12 @@ Simulation::reception_pair Simulation::whoReceivedPacket(Node<>::node_ptr sender
 				break;
 			case PACKET_CORRUPTED:
 				received_garbage.push_back(i->second);
+			default:
+				continue;
 		}
 	}
 
-	return reception_pair(received_OK, received_garbage);
+	return reception_status(received_OK, received_garbage);
 }
 
 std::string Simulation::list_nodes()

@@ -1,8 +1,17 @@
 #ifndef WIREDTO154_NETWORK_SERVER_H
 #define WIREDTO154_NETWORK_SERVER_H
 
+// The Server class defines a UDP server that listen a specific port for
+// incoming packet from a single host. This host is then mapped to a
+// node within the simulation.
+// For each packet sent to this server, the simulation engines will compute
+// the list of (simulated) nodes that should receive the message.
+
+
 // The following class is heavily inspired from the Boost examples.
 // Copyright (c) 2003-2012 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+
+#include "frame.hpp"
 
 #include <list>
 #include <boost/shared_ptr.hpp>
@@ -17,7 +26,6 @@ class Server
 	public:
 		typedef boost::shared_ptr<Server> server_ptr;
 		typedef std::list<server_ptr> server_list;
-		typedef boost::array<char, IEEE802154_MAX_FRAME_SIZE> frame;
 		Server(boost::asio::io_service& io_service, int port);
 
 	private:
@@ -33,7 +41,7 @@ class Server
 
 		udp::socket socket_;
 		udp::endpoint remote_endpoint_;
-		frame recv_buffer_;
+		Frame::frame recv_buffer_;
 };
 
 #endif /* WIREDTO154_NETWORK_SERVER_H */

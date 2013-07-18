@@ -4,6 +4,7 @@
 #include "coordinate.hpp"
 #include "modulation.hpp"
 #include "IEEE802154.hpp"
+#include "frame.hpp"
 #include "node.hpp"
 #include "pathlossmodel.hpp"
 #include "server.hpp"
@@ -18,6 +19,9 @@
 #include <string>
 #include <utility>
 
+// prevent the compiler from having cyclic dependencies issues
+class Frame;
+
 class Simulation {
 	public:
 		typedef boost::mt19937 rng;
@@ -26,7 +30,7 @@ class Simulation {
 
 		/* first node list is the list of nodes that will receive the packet
 		 * second node list is the list of nodes that will receive a damaged packet */
-		typedef std::pair<Node<>::node_list, Node<>::node_list> reception_pair;
+		typedef std::pair<Node<>::node_list, Node<>::node_list> reception_status;
 		static rng randomness;
 		void load(const std::string & filename);
 		static Simulation & get(void);
@@ -39,10 +43,10 @@ class Simulation {
 		enum reception_type { PACKET_OK, PACKET_CORRUPTED, PACKET_NOT_RECEIVED };
 		reception_type receivePacket(Node<>::node_ptr sender,
                            Node<>::node_ptr receiver,
-                           const std::string & msg);
-		reception_pair whoReceivedPacket(Node<>::node_ptr sender,
-										const std::string & msg);
-
+						   const Frame::frame & msg);
+		reception_status whoReceivedPacket(Node<>::node_ptr sender,
+										const Frame::frame & msg);
+		void start(void) { io_service.run(); }
 		void stop(int node) { std::exit(EXIT_SUCCESS); } // TODO: send termination message to other nodes as well
 
 		struct exception_on_simulation_loading: std::exception {

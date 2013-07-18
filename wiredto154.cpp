@@ -125,7 +125,11 @@ int main(int argc, char const* argv[])
 		exit(EXIT_FAILURE);
 	}
 
-	// TBD: start the asynchronous server
+	// start the simulation engine
+	// (this should not exit unless the simulation ends)
+	// TODO: make it exit gracefully when ctrl+c is pressed
+	// TODO: send the simulation-end signal to the nodes
+	sim.start();
 
 	// wait for the program to be interrupted
 

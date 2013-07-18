@@ -3,6 +3,9 @@ local_env = env.Clone()
 
 Import('models_lib')
 
-network_lib = local_env.StaticLibrary("network", Split("server.cpp framer.cpp"), CPPPATH=["../core", "../models", "../network"], LIBS=[ models_lib, "pthread", "boost_system-mt" ])
+network_lib = local_env.StaticLibrary("network",
+                                       Split("server.cpp handler.cpp frame.cpp"),
+                                       CPPPATH=["../core", "../models", "../network"],
+                                       LIBS=[ models_lib, "pthread", "boost_system-mt" ])
 
 Export('network_lib')

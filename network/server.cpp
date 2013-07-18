@@ -1,6 +1,6 @@
 #include "server.hpp"
 
-#include "framer.hpp"
+#include "handler.hpp"
 
 #include <cassert>
 #include <ctime>
@@ -8,8 +8,6 @@
 #include <string>
 #include <boost/array.hpp>
 #include <boost/bind.hpp>
-
-void dispatch(int port, Server::frame message);
 
 Server::Server(boost::asio::io_service& io_service, int port)
 	: socket_(io_service, udp::endpoint(udp::v4(), port)) {
@@ -39,7 +37,7 @@ void Server::handle_receive(const boost::system::error_code& error,
 
 	boost::shared_ptr<std::string> message;
 
-	Framer::dispatch(socket_.local_endpoint().port(), recv_buffer_);
+	Dispatcher::dispatch(socket_.local_endpoint().port(), recv_buffer_, socket_);
 
 	socket_.async_send_to(boost::asio::buffer(recv_buffer_), remote_endpoint_,
 			boost::bind(&Server::handle_send, this, message,
