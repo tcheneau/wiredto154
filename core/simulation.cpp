@@ -162,12 +162,19 @@ Simulation::reception_type Simulation::receivePacket(Node<>::node_ptr sender,
     // TODO: add the PHY preamble, or some other PHY header to the BERcomputation
 
 	double sinr = pathloss->compute_SINR(sender, receiver);
-
+#ifdef DEBUG
+	std::cout << "SINR between " << sender->get_id() << " and "
+			  << receiver->get_id() << " is "
+			  << sinr
+			  << std::endl;
+#endif /* DEBUG */
 	if (sender->get_txPower() - sinr < receiver->get_rxSensitivity())
 		return PACKET_NOT_RECEIVED; // the receiver does not even pick up the signal
 
 	double per = modulation->compute_PER(sinr, msg.size() * sizeof(Frame::frame::value_type));
-
+#ifdef DEBUG
+	std::cout << "PER is: " << per << std::endl;
+#endif /* DEBUG */
 	if (per > (*randgen)())
 		return PACKET_CORRUPTED;
 	else
@@ -193,6 +200,11 @@ Simulation::reception_status Simulation::whoReceivedPacket(Node<>::node_ptr send
 	}
 
 	return reception_status(received_OK, received_garbage);
+}
+
+void Simulation::stop(int node) {
+	std::cout << "node " << node << "asked for simuluation to stop" << std::endl;
+	std::exit(EXIT_SUCCESS);
 }
 
 std::string Simulation::list_nodes()

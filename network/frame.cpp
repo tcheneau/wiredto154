@@ -30,7 +30,17 @@ Frame::frame Frame::build_outbound_frame(const Node<>::node_list good_nodes,
 	}
 
 	// add the initial frame
-
+	for(Frame::frame::const_iterator i = message.begin(); i != message.end(); ++i) {
+		outbound_frame.push_back(*i);
+	}
 
 	return outbound_frame;
+}
+
+Frame::frame Frame::build_sim_end_frame()
+{
+	Frame::frame end_frame;
+
+	end_frame.push_back(SIM_END);
+	return end_frame;
 }

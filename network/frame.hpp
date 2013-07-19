@@ -14,6 +14,7 @@ public:
 	static frame build_outbound_frame(const Node<>::node_list good,
 									  const Node<>::node_list bad,
 									  const frame & message);
+	static frame build_sim_end_frame(void);
 };
 
 #endif // WIREDTO154_NETWORK_FRAME_HPP

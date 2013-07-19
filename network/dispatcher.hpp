@@ -18,8 +18,8 @@ private:
 	static void handle_send_to(const boost::system::error_code & error) { if (error) throw; }
 	static udp::endpoint endpoint;
 public:
-	static void dispatch(int port, Frame::frame message, udp::socket & socket);
-	static void send_broadcast(Frame::frame message, udp::socket & socket);
+	static void dispatch(int port, const Frame::frame & message, udp::socket & socket);
+	static void send_broadcast(const Frame::frame & message, udp::socket & socket);
 
 };
 

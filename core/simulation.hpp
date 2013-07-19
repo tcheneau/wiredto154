@@ -19,9 +19,6 @@
 #include <string>
 #include <utility>
 
-// prevent the compiler from having cyclic dependencies issues
-class Frame;
-
 class Simulation {
 	public:
 		typedef boost::mt19937 rng;
@@ -47,7 +44,7 @@ class Simulation {
 		reception_status whoReceivedPacket(Node<>::node_ptr sender,
 										const Frame::frame & msg);
 		void start(void) { io_service.run(); }
-		void stop(int node) { std::exit(EXIT_SUCCESS); } // TODO: send termination message to other nodes as well
+		void stop(int node);
 
 		struct exception_on_simulation_loading: std::exception {
             char const * what() const throw() { return ""; }

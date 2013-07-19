@@ -10,7 +10,8 @@
 #include <boost/bind.hpp>
 
 Server::Server(boost::asio::io_service& io_service, int port)
-	: socket_(io_service, udp::endpoint(udp::v4(), port)) {
+	: socket_(io_service, udp::endpoint(udp::v4(), port)),
+	  recv_buffer_(128) {
 	start_receive();
 }
 
@@ -30,12 +31,14 @@ void Server::handle_send(boost::shared_ptr<std::string> /*message*/,
 
 void Server::handle_receive(const boost::system::error_code& error,
 		std::size_t /*bytes_transferred*/) {
-	std::cout << socket_.local_endpoint().port() << std::endl;
+#ifdef DEBUG
+	std::cout << "received a message on port "
+			  << socket_.local_endpoint().port()
+			  << std::endl;
+#endif /* DEBUG */
 
 	if (error)
 		throw boost::system::system_error(error);
-
-	boost::shared_ptr<std::string> message;
 
 	// parse the frame and determine what to do with it
 	Dispatcher::dispatch(socket_.local_endpoint().port(), recv_buffer_, socket_);

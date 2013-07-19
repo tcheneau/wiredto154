@@ -38,6 +38,11 @@ int main(int argc, char const* argv[])
 	string modulation;
 	string pathloss;
 
+#ifdef DEBUG
+	cout << "This binary has been compiled with the \"debug\" flag!" << endl
+		 << "If you want performance, rebuild this program in \"release\" mode." << endl;
+#endif /* DEBUG */
+
 	Simulation & sim = Simulation::get();
     try {
         po::options_description desc("Allowed options");
