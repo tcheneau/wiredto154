@@ -1,10 +1,14 @@
-#include "handler.hpp"
+#include "dispatcher.hpp"
 
 #include "simulation.hpp"
 
+#include <boost/asio.hpp>
+#include "boost/bind.hpp"
 #include <ostream>
 
 static int broadcast_port = 10000;
+udp::endpoint Dispatcher::endpoint(boost::asio::ip::address::from_string("224.1.1.1"),
+								   broadcast_port);
 
 void Dispatcher::dispatch(int port, Frame::frame message, udp::socket &socket) {
 	Simulation & sim = Simulation::get();
@@ -29,6 +33,10 @@ void Dispatcher::dispatch(int port, Frame::frame message, udp::socket &socket) {
 void Dispatcher::send_broadcast(Frame::frame message, udp::socket &socket) {
 	// TODO: send message to a multicast group on a specific port
 
+	socket.async_send_to(
+		boost::asio::buffer(message), endpoint,
+		boost::bind(&Dispatcher::handle_send_to,
+					boost::asio::placeholders::error));
 }
 
 

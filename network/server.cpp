@@ -1,6 +1,6 @@
 #include "server.hpp"
 
-#include "handler.hpp"
+#include "dispatcher.hpp"
 
 #include <cassert>
 #include <ctime>
@@ -37,14 +37,8 @@ void Server::handle_receive(const boost::system::error_code& error,
 
 	boost::shared_ptr<std::string> message;
 
+	// parse the frame and determine what to do with it
 	Dispatcher::dispatch(socket_.local_endpoint().port(), recv_buffer_, socket_);
-
-	socket_.async_send_to(boost::asio::buffer(recv_buffer_), remote_endpoint_,
-			boost::bind(&Server::handle_send, this, message,
-				boost::asio::placeholders::error,
-				boost::asio::placeholders::bytes_transferred));
-
-	// parse the header
 
 	start_receive(); /* make oneself ready for the next packet */
 }
