@@ -1,5 +1,10 @@
 #include "simulation.hpp"
 
+#include "tools.hpp"
+
+#ifdef DEBUG
+#include <boost/lexical_cast.hpp>
+#endif /* DEBUG */
 #include <cstdlib>
 #include <ctime>
 #include <sstream>
@@ -171,9 +176,9 @@ Simulation::reception_type Simulation::receivePacket(Node<>::node_ptr sender,
 	if (sender->get_txPower() - sinr < receiver->get_rxSensitivity())
 		return PACKET_NOT_RECEIVED; // the receiver does not even pick up the signal
 
-	double per = modulation->compute_PER(sinr, msg.size() * sizeof(Frame::frame::value_type));
+	double per = modulation->compute_PER(log_to_linear<double>(sinr), msg.size() * sizeof(Frame::frame::value_type));
 #ifdef DEBUG
-	std::cout << "PER is: " << per << std::endl;
+	std::cout << "PER is: " << boost::lexical_cast<double>(per) << std::endl;
 #endif /* DEBUG */
 	if (per > (*randgen)())
 		return PACKET_CORRUPTED;

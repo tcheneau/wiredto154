@@ -4,8 +4,7 @@
 #include <cmath>
 
 template<typename T>
-inline T log_to_linear(T) {
-	return pow(10, x/10);
-
+inline T log_to_linear(T x) {
+	return std::pow(10, x/10);
 }
 #endif
