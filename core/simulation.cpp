@@ -208,7 +208,7 @@ Simulation::reception_status Simulation::whoReceivedPacket(Node<>::node_ptr send
 }
 
 void Simulation::stop(int node) {
-	std::cout << "node " << node << "asked for simuluation to stop" << std::endl;
+	std::cout << "node " << node << " asked for simuluation to stop" << std::endl;
 	std::exit(EXIT_SUCCESS);
 }
 

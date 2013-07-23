@@ -30,16 +30,17 @@ void Server::handle_send(boost::shared_ptr<std::string> /*message*/,
 }
 
 void Server::handle_receive(const boost::system::error_code& error,
-		std::size_t /*bytes_transferred*/) {
+		std::size_t read_size/*bytes_transferred*/) {
 #ifdef DEBUG
 	std::cout << "received a message on port "
 			  << socket_.local_endpoint().port()
+			  << " (" << read_size << " bytes)"
 			  << std::endl;
 #endif /* DEBUG */
+	recv_buffer_.resize(read_size);
 
 	if (error)
 		throw boost::system::system_error(error);
-
 	// parse the frame and determine what to do with it
 	Dispatcher::dispatch(socket_.local_endpoint().port(), recv_buffer_, socket_);
 

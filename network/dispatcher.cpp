@@ -13,7 +13,9 @@ static int broadcast_port = 10000;
 udp::endpoint Dispatcher::endpoint(boost::asio::ip::address::from_string("224.1.1.1"),
 								   broadcast_port);
 
-void Dispatcher::dispatch(int port, const Frame::frame & message, udp::socket &socket) {
+void Dispatcher::dispatch(int port,
+						  const Frame::frame & message,
+						  udp::socket &socket) {
 	Simulation & sim = Simulation::get();
 	assert(sim.nodes[port]);
 
@@ -49,7 +51,7 @@ void Dispatcher::dispatch(int port, const Frame::frame & message, udp::socket &s
 /* this send a message to a multicast destination */
 void Dispatcher::send_broadcast(const Frame::frame & message, udp::socket &socket) {
 	socket.async_send_to(
-		boost::asio::buffer(message), endpoint,
+				boost::asio::buffer(message, message.size()), endpoint,
 		boost::bind(&Dispatcher::handle_send_to,
 					boost::asio::placeholders::error));
 }
