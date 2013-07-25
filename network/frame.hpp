@@ -11,7 +11,8 @@ public:
 	typedef std::vector<uint8_t> frame;
 	enum type { INBOUND_FRAME, SIM_STOP, /* from the clients */
 			  OUTBOUND_FRAME, SIM_END /* from the server */ };
-	static frame build_outbound_frame(const Node<>::node_list good,
+	static frame build_outbound_frame(const Node<>::node_ptr sender,
+									  const Node<>::node_list good,
 									  const Node<>::node_list bad,
 									  const frame & message);
 	static frame build_sim_end_frame(void);

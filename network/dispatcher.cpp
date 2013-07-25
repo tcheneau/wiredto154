@@ -80,7 +80,8 @@ void Dispatcher::parse_inbound_frame(const Node<>::node_ptr sender,
 	}
 #endif
 	// build a frame for sending it back to the multicast address
-	Frame::frame outbound_frame = Frame::build_outbound_frame(good_bad_nodes.first,
+	Frame::frame outbound_frame = Frame::build_outbound_frame(sender,
+															  good_bad_nodes.first,
 															  good_bad_nodes.second,
 															  real_packet);
 
