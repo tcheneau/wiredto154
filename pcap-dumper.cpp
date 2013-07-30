@@ -156,6 +156,8 @@ bool parse_frame(list<uint16_t> & good_nodes, list<uint16_t> & bad_nodes,
 	node_id = char_to_uint16(frame, offset);
 	offset += 2;
 
+	good_nodes.push_back(node_id);
+
 	size_good = char_to_uint16(frame, offset);
 	offset += 2;
 
