@@ -61,7 +61,13 @@ TODO
 * robust makefile system
 * latency calibration tool
 
+Utilities
+---------
 
+### PCAP dumper
+
+Example of use:
+./pcap-dumper --maddr 224.1.1.1 --mport 10000
 
 Acknowledgment
 --------------
