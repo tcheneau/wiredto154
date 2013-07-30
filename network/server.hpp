@@ -23,6 +23,7 @@ class Server
 {
 	private:
 			static const int IEEE802154_MAX_FRAME_SIZE = 127;
+			static const int UDP_MAX_FRAME_SIZE = 65535;
 	public:
 		typedef boost::shared_ptr<Server> server_ptr;
 		typedef std::list<server_ptr> server_list;
