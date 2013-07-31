@@ -1,7 +1,13 @@
 #include "frame.hpp"
 
+#include <boost/bind.hpp>
+
 #define MSB_UINT16(x) ((x>>8) & 0xff)
 #define LSB_UINT16(x) (x & 0xff)
+
+static int broadcast_port = 10000;
+udp::endpoint Frame::endpoint(boost::asio::ip::address::from_string("224.1.1.1"),
+								   broadcast_port);
 
 Frame::frame Frame::build_outbound_frame(const Node<>::node_ptr sender,
 										  const Node<>::node_list good_nodes,
@@ -46,4 +52,18 @@ Frame::frame Frame::build_sim_end_frame()
 
 	end_frame.push_back(SIM_END);
 	return end_frame;
+}
+
+/* this send a message to a multicast destination */
+void Frame::send_broadcast_async(const Frame::frame & message, udp::socket &socket) {
+	socket.async_send_to(
+				boost::asio::buffer(message, message.size()), endpoint,
+		boost::bind(&Frame::handle_send_to,
+					boost::asio::placeholders::error));
+}
+
+void Frame::send_broadcast_sync(const Frame::frame &message) {
+	boost::asio::io_service io_service;
+	udp::socket socket(io_service, udp::endpoint(endpoint.protocol(), 0));
+	socket.send_to(boost::asio::buffer(message, message.size()), endpoint);
 }

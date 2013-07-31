@@ -3,10 +3,15 @@
 
 #include "node.hpp"
 
+#include <boost/asio.hpp>
 #include <stdint.h>
 #include <vector>
 
+using boost::asio::ip::udp;
+
 class Frame {
+	static udp::endpoint endpoint;
+	static void handle_send_to(const boost::system::error_code & error) { if (error) throw; }
 public:
 	typedef std::vector<uint8_t> frame;
 	enum type { INBOUND_FRAME, SIM_STOP, /* from the clients */
@@ -17,6 +22,8 @@ public:
 									  const Node<>::node_list bad,
 									  const frame & message);
 	static frame build_sim_end_frame(void);
+	static void send_broadcast_async(const Frame::frame & message, udp::socket & socket);
+	static void send_broadcast_sync(const Frame::frame & message);
 };
 
 #endif // WIREDTO154_NETWORK_FRAME_HPP

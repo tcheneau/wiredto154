@@ -7,6 +7,7 @@
 #endif /* DEBUG */
 #include <cstdlib>
 #include <ctime>
+#include <signal.h>
 #include <sstream>
 #include <pugixml.hpp>
 
@@ -19,8 +20,26 @@ Simulation & Simulation::get(void) {
 	return sim;
 }
 
+void sim_end_handler(int sig) {
+	if (sig == SIGINT) {
+		std::cout << "Simulation has been interrupted by SIGINT" << std::endl;
+		Simulation & sim = Simulation::get();
+		Frame::send_broadcast_sync(Frame::build_sim_end_frame());
+		sim.io_service.stop();
+	} else {
+		std::cerr << "Signal not recognized" << std::endl;
+	}
+}
+
 void Simulation::init(void) {
 	this->initialized = true;
+
+	/* handle the SIGINT */
+	struct sigaction sa = {};
+	sa.sa_handler = sim_end_handler;
+	sigfillset(&sa.sa_mask);
+	sigaction(SIGINT, &sa, NULL);
+
 
 	/* all models need to be initialized here */
 	Modulation::register_modulation(Modulation::modulation_ptr(new Phy_IEEE802154_OQPSK()));
@@ -153,10 +172,10 @@ void Simulation::load(const std::string & filename) {
 
 				);
 
+		// start a server on each ports
 		servers.push_back(Server::server_ptr(new Server(io_service, node_port.as_int())));
 	}
 
-	// start a server on each ports
 }
 
 Simulation::reception_type Simulation::receivePacket(Node<>::node_ptr sender,
@@ -210,7 +229,8 @@ Simulation::reception_status Simulation::whoReceivedPacket(Node<>::node_ptr send
 
 void Simulation::stop(int node) {
 	std::cout << "node " << node << " asked for simuluation to stop" << std::endl;
-	std::exit(EXIT_SUCCESS);
+	Frame::send_broadcast_sync(Frame::build_sim_end_frame());
+	io_service.stop();
 }
 
 std::string Simulation::list_nodes()

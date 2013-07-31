@@ -9,9 +9,6 @@
 #include <ostream>
 #endif
 
-static int broadcast_port = 10000;
-udp::endpoint Dispatcher::endpoint(boost::asio::ip::address::from_string("224.1.1.1"),
-								   broadcast_port);
 
 void Dispatcher::dispatch(int port,
 						  const Frame::frame & message,
@@ -36,7 +33,7 @@ void Dispatcher::dispatch(int port,
 #ifdef DEBUG
 		std::cout << "packet is an SIMULATION STOP frame" << std::endl;
 #endif /* DEBUG */
-		send_broadcast(Frame::build_sim_end_frame(), socket);
+		Frame::send_broadcast_async(Frame::build_sim_end_frame(), socket);
 		sim.stop(sim.nodes[port]->get_id());
 		break;
 	default:
@@ -48,13 +45,6 @@ void Dispatcher::dispatch(int port,
 
 }
 
-/* this send a message to a multicast destination */
-void Dispatcher::send_broadcast(const Frame::frame & message, udp::socket &socket) {
-	socket.async_send_to(
-				boost::asio::buffer(message, message.size()), endpoint,
-		boost::bind(&Dispatcher::handle_send_to,
-					boost::asio::placeholders::error));
-}
 
 
 void Dispatcher::parse_inbound_frame(const Node<>::node_ptr sender,
@@ -86,6 +76,6 @@ void Dispatcher::parse_inbound_frame(const Node<>::node_ptr sender,
 															  real_packet);
 
 	// send to multicast for real
-	send_broadcast(outbound_frame, socket);
+	Frame::send_broadcast_async(outbound_frame, socket);
 }
 

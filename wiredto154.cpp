@@ -136,6 +136,7 @@ int main(int argc, char const* argv[])
 	// TODO: send the simulation-end signal to the nodes
 	sim.start();
 
+	cout << "Sending \"simulation ending\" frame to all nodes" << endl;
 	// wait for the program to be interrupted
 
     return 0;

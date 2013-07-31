@@ -49,6 +49,7 @@ class Simulation {
 		struct exception_on_simulation_loading: std::exception {
             char const * what() const throw() { return ""; }
 		};
+		friend void sim_end_handler(int);
 	private:
 		bool initialized;
 		void init(void);
