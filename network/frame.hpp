@@ -4,6 +4,7 @@
 #include "node.hpp"
 
 #include <boost/asio.hpp>
+#include <string>
 #include <stdint.h>
 #include <vector>
 
@@ -22,6 +23,7 @@ public:
 									  const Node<>::node_list bad,
 									  const frame & message);
 	static frame build_sim_end_frame(void);
+	static void set_multicast_parameter(std::string & mcast_addr, int mcast_port);
 	static void send_broadcast_async(const Frame::frame & message, udp::socket & socket);
 	static void send_broadcast_sync(const Frame::frame & message);
 };

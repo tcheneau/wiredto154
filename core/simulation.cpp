@@ -262,6 +262,10 @@ void Simulation::set_pathloss_model(std::string & model) {
 	}
 }
 
+void Simulation::set_multicast_parameter(std::string &mcast_addr, int mcast_port) {
+	Frame::set_multicast_parameter(mcast_addr, mcast_port);
+}
+
 bool Simulation::is_properly_configured(std::string & error_msg) {
 	if (!initialized) {
 		error_msg = "Simulation has not been initialized properly";

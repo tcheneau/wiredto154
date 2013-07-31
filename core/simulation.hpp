@@ -34,6 +34,7 @@ class Simulation {
 		void set_seed(int seed) { randomness.seed(seed); }
 		void set_modulation(std::string & modname);
 		void set_pathloss_model(std::string & model);
+		void set_multicast_parameter(std::string & mcast_addr, int mcast_port);
 		Node<>::node_map nodes;
 		std::string list_nodes(void);
 		bool is_properly_configured(std::string & error_msg);

@@ -5,9 +5,7 @@
 #define MSB_UINT16(x) ((x>>8) & 0xff)
 #define LSB_UINT16(x) (x & 0xff)
 
-static int broadcast_port = 10000;
-udp::endpoint Frame::endpoint(boost::asio::ip::address::from_string("224.1.1.1"),
-								   broadcast_port);
+udp::endpoint Frame::endpoint;
 
 Frame::frame Frame::build_outbound_frame(const Node<>::node_ptr sender,
 										  const Node<>::node_list good_nodes,
@@ -52,6 +50,11 @@ Frame::frame Frame::build_sim_end_frame()
 
 	end_frame.push_back(SIM_END);
 	return end_frame;
+}
+
+void Frame::set_multicast_parameter(std::string &mcast_addr, int mcast_port) {
+	endpoint = udp::endpoint(boost::asio::ip::address::from_string(mcast_addr),
+							 mcast_port);
 }
 
 /* this send a message to a multicast destination */

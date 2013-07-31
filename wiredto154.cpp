@@ -37,6 +37,8 @@ int main(int argc, char const* argv[])
 	string simulation_file;
 	string modulation;
 	string pathloss;
+	string mcast_addr;
+	int mcast_port;
 
 #ifdef DEBUG
 	cout << "This binary has been compiled with the \"debug\" flag!" << endl
@@ -48,6 +50,12 @@ int main(int argc, char const* argv[])
         po::options_description desc("Allowed options");
         desc.add_options()
             ("help", "produce this help message")
+			("multicast-addr",
+			 po::value<string>(&mcast_addr)->default_value("224.1.1.1"),
+			 "multicast address used for sending outgoing frames")
+			("multicast-port",
+			 po::value<int>(&mcast_port)->default_value(10000),
+			 "multicast port used for sending outgoing frames")
 			("list-modulation", "list available modulation schemes")
 			("list-pathloss", "list available pathloss models")
 			("modulation", po::value<string>(&modulation), "modulation scheme")
@@ -104,7 +112,9 @@ int main(int argc, char const* argv[])
 			cerr << "\"simulation\" argument is mandatory" << endl;
 			cout << desc;
 			return 0;
-        }
+		}
+
+		sim.set_multicast_parameter(mcast_addr, mcast_port);
     }
     catch(std::exception& e)
     {
