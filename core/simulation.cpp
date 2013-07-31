@@ -176,7 +176,8 @@ Simulation::reception_type Simulation::receivePacket(Node<>::node_ptr sender,
 	if (sender->get_txPower() - sinr < receiver->get_rxSensitivity())
 		return PACKET_NOT_RECEIVED; // the receiver does not even pick up the signal
 
-	double per = modulation->compute_PER(log_to_linear<double>(sinr), msg.size() * sizeof(Frame::frame::value_type));
+	/* remove the 8 bytes of the timestamp from the message size */
+	double per = modulation->compute_PER(log_to_linear<double>(sinr), (msg.size() - 8)* sizeof(Frame::frame::value_type));
 #ifdef DEBUG
 	std::cout << "PER is: " << boost::lexical_cast<double>(per) << std::endl;
 #endif /* DEBUG */

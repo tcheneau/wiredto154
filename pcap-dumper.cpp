@@ -180,6 +180,11 @@ bool parse_frame(list<uint16_t> & good_nodes, list<uint16_t> & bad_nodes,
 		offset += 2;
 	}
 
+	/* skip the 8 bytes timestamp */
+	offset += 8;
+	if (p_size < offset)
+		return false;
+
 	p_size = p_size - offset;
 	* p = &frame[offset];
 
