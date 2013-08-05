@@ -5,6 +5,7 @@
 #include "exception.hpp"
 #include "modulation.hpp"
 #include "node.hpp"
+#include "types.hpp"
 
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/normal_distribution.hpp>
@@ -29,8 +30,12 @@ class PathLossModel {
 		std::string description;
 		PathLossModel(const std::string & name): model_name(name) {}
 	public:
+		/* tell if the model is simplistic (and return a reception_type directly)
+		 * or advanced (and can only compute a SINR) */
+		bool simplistic;
 		virtual const std::string & get_model_name(void) = 0;
         virtual double compute_SINR(Node<>::node_ptr sender, Node<>::node_ptr receiver) throw(ModelException) = 0;
+		virtual reception_type receivePacket(Node<>::node_ptr sender, Node<>::node_ptr receiver, int msg_size) throw(ModelException) = 0;
 		virtual const std::string& get_model_name(void) const { return model_name; }
 		virtual const std::string& get_name(void) const { return name; }
 		virtual const std::string& get_description(void) const { return description; }
@@ -65,6 +70,31 @@ class LogNormalShadowing: public PathLossModel {
 					   boost::mt19937 & randomness);
 	virtual const std::string & get_model_name(void);
     virtual double compute_SINR(Node<>::node_ptr sender, Node<>::node_ptr receiver) throw(ModelException);
+	reception_type receivePacket(Node<>::node_ptr sender, Node<>::node_ptr receiver, int msg_size) throw(ModelException) {
+		throw ModelException("advanced models cannot use receivePacket()");
+	};
+};
+
+/* Unit Disc path loss model */
+class UnitDisc: public PathLossModel {
+	float good_radius; /* radius within which transmission is always good */
+	float damaged_radius; /* within the area comprized between the good_radius
+							  and damaged_radius, nodes receive damaged frames */
+
+	public:
+	UnitDisc(const std::string& name,
+			 const std::string& description):
+			 PathLossModel("Unit Discs") {
+		this->simplistic = true;
+		this->name = name;
+		this->description = description;
+	}
+	const std::string & get_model_name(void);
+	void parse_arguments(std::vector<std::string> options);
+	double compute_SINR(Node<>::node_ptr sender, Node<>::node_ptr receiver) throw(ModelException) {
+		throw ModelException("simplistic models cannot use compute_SINR()");
+	};
+	reception_type receivePacket(Node<>::node_ptr sender, Node<>::node_ptr receiver, int msg_size) throw(ModelException) ;
 };
 
 #endif /* WIREDTO154_MODELS_PATHLOSSMODEL_H */

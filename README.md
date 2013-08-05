@@ -95,7 +95,21 @@ It only captures the timing of a non beacon-enabled network with no acknowledgem
 Path loss model
 ---------------
 
-For the moment, only one path loss model is implemented.
+For the moment, very few path loss models are implemented.
+
+### Unit discs model
+
+A standard unity discs implementation which models two discs around the sender.
+These two discs that delimits three areas:
+
+* in the area of the innermost disc, all packets are received. The size of this
+  disc is controlled by the "good-radius" command line parameter.
+* in the area between the innermost disc and the outermost disc, all received
+  packets are damaged. The size of the outermost disc is controlled by the
+  "damaged-radius" command line parameter.
+* in the area outside of the outermost disc, no packet is ever received.
+
+Note that this model is very basic and has only been implemented for prototype testing.
 
 ### Log-normal shadowing path loss model
 
@@ -189,6 +203,11 @@ Usage
       --pathloss arg                    path loss model for the simulation
       -s [ --simulation ] arg           XML file that describes the simulation
 
+A hidden argument, named *--help-pathloss* can be passed to the program. It
+provides detailed information on the parameters accepted by the path loss
+model. However, due to a limitation of the Boost Program Option library, it seems
+that the parameters have to be passed in the "--param=value" format (e.g. other
+format such as "--param value" won't be recognized).
 
 Adding nodes to the simulation
 ------------------------------

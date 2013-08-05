@@ -4,7 +4,8 @@ Import('env')
 local_env = env.Clone()
 
 models_lib = StaticLibrary("models",
-                           Split("coordinate.cpp pathlossmodel.cpp modulation.cpp IEEE802154.cpp"))
+                           Split("coordinate.cpp pathlossmodel.cpp modulation.cpp IEEE802154.cpp"),
+                           CPPPATH = [ "../core", "../network", "."])
 Export('models_lib')
 
 local_env = Environment()

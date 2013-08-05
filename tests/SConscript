@@ -24,6 +24,7 @@ app3 = local_env.Program(source = "simulation-test.cpp",
 		# the following line is a workaround to solve circular dependencies issues when linking the program
 		LINKFLAGS = "-Wl,-\(")
 app4 = local_env.Program(source = "pathloss-test.cpp",
+                          CPPPATH=["../core", "../models", "../network"],
                           LIBS = libs + ["boost_program_options"],
                           LIBPATH = [ "../models" ])
 local_env.Default([app, app2, app3, app4])

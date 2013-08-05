@@ -115,6 +115,12 @@ void Simulation::init(void) {
 														   -90, /* background noise */
 														   randomness /* randomness source */)));
 
+	std::string description_Unit_Disc = "standard unity discs implementation, with two discs, "
+										 "that delimits three areas where three packet is received, "
+										 "the packet is received but damaged and the area where"
+										 " the packet is not received";
+	PathLossModel::register_model(PathLossModel::pathloss_ptr(
+									  new UnitDisc("unit", description_Unit_Disc)));
 }
 
 void Simulation::load(const std::string & filename) {
@@ -178,12 +184,17 @@ void Simulation::load(const std::string & filename) {
 
 }
 
-Simulation::reception_type Simulation::receivePacket(Node<>::node_ptr sender,
+reception_type Simulation::receivePacket(Node<>::node_ptr sender,
                                Node<>::node_ptr receiver,
 							   const Frame::frame & msg) {
 	// compute the SNR at the receiver
 	// apply the BER model to determine if the packets can be received
     // TODO: add the PHY preamble, or some other PHY header to the BERcomputation
+
+	/* simplistic models only need to deal with distances or message size */
+	if (pathloss->simplistic) {
+		return pathloss->receivePacket(sender, receiver, msg.size());
+	} else {
 
 	double sinr = pathloss->compute_SINR(sender, receiver);
 #ifdef DEBUG
@@ -204,6 +215,7 @@ Simulation::reception_type Simulation::receivePacket(Node<>::node_ptr sender,
 		return PACKET_CORRUPTED;
 	else
 		return PACKET_OK;
+	}
 }
 
 Simulation::reception_status Simulation::whoReceivedPacket(Node<>::node_ptr sender, const Frame::frame &msg) {

@@ -101,7 +101,7 @@ int main(int argc, char const* argv[])
 		else {
 			cerr << "no path loss model selected, you need to choose one using the --pathloss selector" << endl
 				 << "for the list of path loss model, try --list-pathloss." << endl
-				 << "use --pathloss-help to learn for model specific argument" << endl;
+				 << "use --help-pathloss to learn for model specific argument" << endl;
 			exit(EXIT_FAILURE);
 		}
 

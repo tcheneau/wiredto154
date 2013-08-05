@@ -1,7 +1,5 @@
 #include "dispatcher.hpp"
 
-#include "simulation.hpp"
-
 #include <boost/asio.hpp>
 #include "boost/bind.hpp"
 
@@ -44,8 +42,6 @@ void Dispatcher::dispatch(int port,
 	}
 
 }
-
-
 
 void Dispatcher::parse_inbound_frame(const Node<>::node_ptr sender,
 									 const Frame::frame & message,

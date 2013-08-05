@@ -17,7 +17,6 @@ private:
 									udp::socket & socket);
 public:
 	static void dispatch(int port, const Frame::frame & message, udp::socket & socket);
-
 };
 
 #endif // WIREDTO154_NETWORK_DISPATCHER_HPP

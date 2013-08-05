@@ -8,6 +8,7 @@
 #include "node.hpp"
 #include "pathlossmodel.hpp"
 #include "server.hpp"
+#include "types.hpp"
 
 #include <cstdlib>
 #include <boost/asio.hpp>
@@ -39,7 +40,6 @@ class Simulation {
 		Node<>::node_map nodes;
 		std::string list_nodes(void);
 		bool is_properly_configured(std::string & error_msg);
-		enum reception_type { PACKET_OK, PACKET_CORRUPTED, PACKET_NOT_RECEIVED };
 		reception_type receivePacket(Node<>::node_ptr sender,
                            Node<>::node_ptr receiver,
 						   const Frame::frame & msg);
