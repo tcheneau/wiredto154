@@ -1,8 +1,8 @@
 #ifndef WIREDTO154_NETWORK_DISPATCHER_HPP
 #define WIREDTO154_NETWORK_DISPATCHER_HPP
 
-#include "node.hpp"
-#include "simulation.hpp"
+#include "core/simulation.hpp"
+#include "models/node.hpp"
 
 #include <boost/asio.hpp>
 #include <boost/system/error_code.hpp>

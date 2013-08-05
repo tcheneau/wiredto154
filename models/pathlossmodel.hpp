@@ -5,7 +5,8 @@
 #include "exception.hpp"
 #include "modulation.hpp"
 #include "node.hpp"
-#include "types.hpp"
+
+#include "core/types.hpp"
 
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/normal_distribution.hpp>

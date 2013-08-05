@@ -3,7 +3,7 @@
 #include <boost/test/unit_test.hpp>
 #define BOOST_TEST_MODULE simulation test
 
-#include "simulation.hpp"
+#include "core/simulation.hpp"
 
 BOOST_AUTO_TEST_CASE( loading_test ) {
 	Simulation & sim = Simulation::get();

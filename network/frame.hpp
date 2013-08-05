@@ -1,7 +1,7 @@
 #ifndef WIREDTO154_NETWORK_FRAME_HPP
 #define WIREDTO154_NETWORK_FRAME_HPP
 
-#include "node.hpp"
+#include "models/node.hpp"
 
 #include <boost/asio.hpp>
 #include <string>

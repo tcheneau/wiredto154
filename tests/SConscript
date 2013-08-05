@@ -14,17 +14,15 @@ libs = [ 'boost_unit_test_framework', models_lib ]
 local_env.Append(CPPPATH = [os.path.join(boost_prefix, "include")])
 local_env.Append(LIBPATH = [os.path.join(boost_prefix, "lib")])
 
-local_env.Append(CPPPATH= "../models")
+local_env.Append(CPPPATH= ["..", "."])
 
 app = local_env.Program(source = "coordinate-test.cpp", LIBS = libs, LIBPATH = [ "../models" ])
 app2 = local_env.Program(source = "IEEE802154-test.cpp", LIBS = libs, LIBPATH = [ "../models" ])
 app3 = local_env.Program(source = "simulation-test.cpp", 
-		CPPPATH=["../core", "../models", "../network"],
 		LIBS = libs + [ core_lib, network_lib ] + ["pugixml", "pthread", "boost_system-mt", "boost_program_options"],
 		# the following line is a workaround to solve circular dependencies issues when linking the program
 		LINKFLAGS = "-Wl,-\(")
 app4 = local_env.Program(source = "pathloss-test.cpp",
-                          CPPPATH=["../core", "../models", "../network"],
                           LIBS = libs + ["boost_program_options"],
                           LIBPATH = [ "../models" ])
 local_env.Default([app, app2, app3, app4])

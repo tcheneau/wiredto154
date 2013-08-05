@@ -1,14 +1,14 @@
 #ifndef WIREDTO154_MODELS_SIMULATION_H
 #define WIREDTO154_MODELS_SIMULATION_H
 
-#include "coordinate.hpp"
-#include "modulation.hpp"
-#include "IEEE802154.hpp"
-#include "frame.hpp"
-#include "node.hpp"
-#include "pathlossmodel.hpp"
-#include "server.hpp"
 #include "types.hpp"
+#include "models/coordinate.hpp"
+#include "models/IEEE802154.hpp"
+#include "models/modulation.hpp"
+#include "models/node.hpp"
+#include "models/pathlossmodel.hpp"
+#include "network/frame.hpp"
+#include "network/server.hpp"
 
 #include <cstdlib>
 #include <boost/asio.hpp>

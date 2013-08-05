@@ -2,7 +2,7 @@
 #define BOOST_TEST_DYN_LINK
 #include <boost/test/unit_test.hpp>
 
-#include "IEEE802154.hpp"
+#include "models/IEEE802154.hpp"
 
 BOOST_AUTO_TEST_CASE( test ) {
 	Phy_IEEE802154_OQPSK modulation;

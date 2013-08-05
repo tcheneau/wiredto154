@@ -5,7 +5,7 @@ Import('models_lib')
 
 network_lib = local_env.StaticLibrary("network",
                                        Split("server.cpp dispatcher.cpp frame.cpp"),
-                                       CPPPATH=["../core", "../models", "../network"],
+                                       CPPPATH=["..", "."],
                                        LIBS=[ models_lib, "pthread", "boost_system-mt" ])
 
 Export('network_lib')

@@ -1,6 +1,6 @@
 #include "simulation.hpp"
 
-#include "tools.hpp"
+#include "models/tools.hpp"
 
 #ifdef DEBUG
 #include <boost/lexical_cast.hpp>

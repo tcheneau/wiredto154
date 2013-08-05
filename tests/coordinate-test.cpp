@@ -5,7 +5,7 @@
 using boost::test_tools::output_test_stream;
 #define BOOST_TEST_MODULE coordinate test
 
-#include "coordinate.hpp"
+#include "models/coordinate.hpp"
 
 #include <ostream>
 

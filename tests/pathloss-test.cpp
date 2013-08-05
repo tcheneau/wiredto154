@@ -3,9 +3,9 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/random/mersenne_twister.hpp>
 
-#include "coordinate.hpp"
-#include "node.hpp"
-#include "pathlossmodel.hpp"
+#include "models/coordinate.hpp"
+#include "models/node.hpp"
+#include "models/pathlossmodel.hpp"
 
 #include <string>
 
