@@ -1,6 +1,42 @@
 #include "pathlossmodel.hpp"
 
+#include <boost/program_options.hpp>
+#include <iostream>
+
+namespace po = boost::program_options;
+
 PathLossModel::pathloss_map PathLossModel::available_pathloss;
+
+/* parse extra command line arguments
+  (does not actually parse any argument if not overloaded) */
+void PathLossModel::parse_arguments(std::vector<std::string> options) {
+
+	try {
+		po::options_description desc("Path loss option options "
+									 "(this Path Loss model does"
+									 " not accept any arguments)");
+		desc.add_options()
+			("pathloss-help", "produce this help message")
+		;
+
+		po::variables_map vm;
+		po::store(po::command_line_parser(options).
+				  options(desc).run(), vm);
+		po::notify(vm);
+
+		if (vm.count("pathloss-help")) {
+			std::cout << "Usage: options_description [options]\n";
+			std::cout << desc;
+			exit(EXIT_SUCCESS);
+		}
+	}
+	catch(std::exception& e)
+	{
+		std::cerr << e.what() << "\n";
+		exit(EXIT_SUCCESS);
+	}
+	return;
+}
 
 void PathLossModel::register_model(pathloss_ptr model) {
 	if (available_pathloss.count(model->get_name()))

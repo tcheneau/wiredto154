@@ -12,6 +12,7 @@
 #include <exception>
 #include <map>
 #include <string>
+#include <vector>
 
 
 class PathLossModel {
@@ -33,6 +34,7 @@ class PathLossModel {
 		virtual const std::string& get_model_name(void) const { return model_name; }
 		virtual const std::string& get_name(void) const { return name; }
 		virtual const std::string& get_description(void) const { return description; }
+		virtual void parse_arguments(std::vector<std::string> options);
 		static void register_model(pathloss_ptr model);
 		static pathloss_ptr lookup_pathloss(const std::string & name);
 		static std::vector<std::string> list_available_model(void);

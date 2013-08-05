@@ -23,10 +23,11 @@
 
 #include "core/simulation.hpp"
 
+#include <boost/program_options.hpp>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
-#include <boost/program_options.hpp>
+#include <vector>
 
 namespace po = boost::program_options;
 using namespace std;
@@ -64,9 +65,13 @@ int main(int argc, char const* argv[])
         ;
 
         po::variables_map vm;
-        po::store(po::command_line_parser(argc, const_cast<char **>(argv)).
-                  options(desc).run(), vm);
-        po::notify(vm);
+		po::parsed_options parsed =
+				po::basic_command_line_parser<char>(argc, const_cast<char **>(argv)).
+				options(desc).allow_unregistered().run();
+		po::store(parsed, vm);
+		po::notify(vm);
+		vector<string> unrecognized_opt =
+				po::collect_unrecognized<char>(parsed.options, po::exclude_positional);
 
         if (vm.count("help")) {
             cout << "Usage: options_description [options]\n";
@@ -91,11 +96,12 @@ int main(int argc, char const* argv[])
         }
 
 		if (vm.count("pathloss")) {
-			sim.set_pathloss_model(pathloss);
+			sim.set_pathloss_model(pathloss, unrecognized_opt);
 		}
 		else {
 			cerr << "no path loss model selected, you need to choose one using the --pathloss selector" << endl
-				 << "for the list of path loss model, try --list-pathloss" << endl;
+				 << "for the list of path loss model, try --list-pathloss." << endl
+				 << "use --pathloss-help to learn for model specific argument" << endl;
 			exit(EXIT_FAILURE);
 		}
 

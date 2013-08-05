@@ -253,9 +253,10 @@ void Simulation::set_modulation(std::string & modname) {
 	}
 }
 
-void Simulation::set_pathloss_model(std::string & model) {
+void Simulation::set_pathloss_model(std::string & model, std::vector<std::string> options) {
 	try{
 		 this->pathloss = PathLossModel::lookup_pathloss(model);
+		 this->pathloss->parse_arguments(options);
 	} catch (PathLossModel::PathLossNotFoundException & e) {
 		std::cerr << "unable to find path loss model " << model << std::endl;
 		std::exit(EXIT_FAILURE);
