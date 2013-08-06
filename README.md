@@ -262,7 +262,7 @@ Contributors
 ------------
 
 * Tony Cheneau
-* Ranganathan Mudumbai (initial code for the UDP radio in Contiki)
+* M. Ranganathan (initial code for the UDP radio in Contiki)
 
 Conditions Of Use
 -----------------
