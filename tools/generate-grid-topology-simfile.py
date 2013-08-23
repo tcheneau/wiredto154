@@ -22,23 +22,25 @@ def create_nodes_list(generator):
            footer
 
 
-def manathan_square(x,y, node_id=1, port=10001, scale_factor=1):
+def manathan_square(x,y, node_id=1, port=10001, scale_factor=1, description=""):
     for i in xrange(x):
         for j in xrange(y):
-            yield (i * scale_factor, j * scale_factor, port, node_id)
+            yield (i * scale_factor, j * scale_factor, port, node_id, description)
             port += 1
             node_id += 1
 
-def create_config(width, height, node_id, port, scale_factor):
+def create_config(width, height, node_id, port, scale_factor, description):
     header = """<?xml version="1.0" encoding="UTF-8" ?>\n<simulation>\n"""
     footer = """</simulation>"""
-    config = create_nodes_list(manathan_square(width, height, node_id, port, scale_factor = scale_factor))
+    config = create_nodes_list(manathan_square(width, height, node_id, port,
+                                               scale_factor, description))
     return header + config + footer
 
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser(usage= "Generate a grid of node (Manhattan topology")
     parser.add_argument("-f", "--filename", help="output file", type=str, default="simulation.xml")
+    parser.add_argument("-d", "--description", help="default description", type=str, default="")
     parser.add_argument("-x", "--width", help="width of the grid", type=int, default=10)
     parser.add_argument("-y", "--height", help="height of the grid", type=int, default=10)
     parser.add_argument("-s", "--scale-factor", help="spacing between nodes", type=int, default=10)
@@ -52,5 +54,6 @@ if __name__ == "__main__":
                               args.height,
                               args.identifier,
                               args.port,
-                              args.scale_factor))
+                              args.scale_factor,
+                              args.description))
 
