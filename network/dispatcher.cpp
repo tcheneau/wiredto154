@@ -52,6 +52,7 @@ void Dispatcher::parse_inbound_frame(const Node<>::node_ptr sender,
 
 	good_bad_nodes = sim.whoReceivedPacket(sender, real_packet);
 #ifdef DEBUG
+	std::cout << "receiving a frame from node " << sender->get_id() << std::endl;
 	std::cout << "list of nodes that will receive the frame correctly" << std::endl;
 	for(Node<>::node_list::const_iterator i = good_bad_nodes.first.begin();
 		i != good_bad_nodes.first.end();
