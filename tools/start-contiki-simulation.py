@@ -63,7 +63,6 @@ if __name__ == "__main__":
     parser.add_argument("-e", "--emu-addr", help="IP address of the PHY emulator (wiredto154)", default="127.0.0.1")
     parser.add_argument("-a", "--mcast-addr", help="IP address of the multicast group", default="224.1.1.1")
     parser.add_argument("-p", "--mcast-port", help="port to listen on (for the multicast address)", type=int, default=10000)
-    parser.add_argument("-v", "--verbose", help="make this tool more verbose", action="store_true")
 
     args = parser.parse_args()
 
