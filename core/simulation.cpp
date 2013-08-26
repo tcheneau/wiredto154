@@ -273,6 +273,12 @@ void Simulation::set_pathloss_model(std::string & model, std::vector<std::string
 		std::cerr << "unable to find path loss model " << model << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
+	std::cerr << "path loss computation model is set to "
+			  << this->pathloss->get_model_name()
+			  <<  std::endl;
+	std::cerr << "model parameters are: "
+			  << this->pathloss->print_parameters()
+			  << std::endl;
 }
 
 void Simulation::set_multicast_parameter(std::string &mcast_addr, int mcast_port) {

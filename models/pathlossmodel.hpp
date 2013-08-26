@@ -41,6 +41,7 @@ class PathLossModel {
 		virtual const std::string& get_name(void) const { return name; }
 		virtual const std::string& get_description(void) const { return description; }
 		virtual void parse_arguments(std::vector<std::string> options);
+		virtual const std::string print_parameters(void) = 0;
 		static void register_model(pathloss_ptr model);
 		static pathloss_ptr lookup_pathloss(const std::string & name);
 		static std::vector<std::string> list_available_model(void);
@@ -70,6 +71,7 @@ class LogNormalShadowing: public PathLossModel {
 					   double background_noise,
 					   boost::mt19937 & randomness);
 	virtual const std::string & get_model_name(void);
+	virtual const std::string print_parameters(void);
     virtual double compute_SINR(Node<>::node_ptr sender, Node<>::node_ptr receiver) throw(ModelException);
 	reception_type receivePacket(Node<>::node_ptr sender, Node<>::node_ptr receiver, int msg_size) throw(ModelException) {
 		throw ModelException("advanced models cannot use receivePacket()");
@@ -91,6 +93,7 @@ class UnitDisc: public PathLossModel {
 		this->description = description;
 	}
 	const std::string & get_model_name(void);
+	virtual const std::string print_parameters(void);
 	void parse_arguments(std::vector<std::string> options);
 	double compute_SINR(Node<>::node_ptr sender, Node<>::node_ptr receiver) throw(ModelException) {
 		throw ModelException("simplistic models cannot use compute_SINR()");

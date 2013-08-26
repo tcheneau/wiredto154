@@ -66,7 +66,17 @@ std::vector<std::string> PathLossModel::list_available_model(void) {
 /******************************/
 const std::string & LogNormalShadowing::get_model_name(void) {
 	static std::string name("Log-Normal Shadowing");
-    return name;
+	return name;
+}
+
+const std::string LogNormalShadowing::print_parameters(void) {
+	std::stringstream params;
+	params << "distance 0: " << this->d0 << "; "
+		   << "path loss (eta): " << this->path_loss << "; "
+		   << "shadowing deviation (sigma): " << this->shadowing_deviation << "; "
+		   << "path loss at distance 0: " << this->path_loss_d0 << "; "
+		   << "background noise: " << this->background_noise;
+	return params.str();
 }
 
 double LogNormalShadowing::compute_SINR(Node<>::node_ptr sender,
@@ -110,6 +120,13 @@ LogNormalShadowing::LogNormalShadowing(const std::string& name,
 const std::string &UnitDisc::get_model_name() {
 	static std::string name("Unitary Disc");
 	return name;
+}
+
+const std::string UnitDisc::print_parameters(void) {
+	std::stringstream params;
+	params << "good node radius: " << this->good_radius << "; "
+		   << "damaged frame radius: " << this->damaged_radius;
+	return params.str();
 }
 
 void UnitDisc::parse_arguments(std::vector<std::string> options) {
