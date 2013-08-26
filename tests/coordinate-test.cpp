@@ -22,8 +22,13 @@ BOOST_AUTO_TEST_CASE( constructors_test ) {
 BOOST_AUTO_TEST_CASE( method_test ) {
 	Coordinate2D a;
 	Coordinate2D b(3., 4.);
+	Coordinate2D c(1., 1.);
+	Coordinate2D d(-1., 1.);
+	Coordinate2D e(1., -1.);
 	BOOST_CHECK_EQUAL(b.distance(&a), 5.0);
 	BOOST_CHECK_EQUAL(a.distance(&a), 0.0);
+	BOOST_CHECK_EQUAL(c.distance(&d), 2.0);
+	BOOST_CHECK_EQUAL(c.distance(&e), 2.0);
 }
 
 BOOST_AUTO_TEST_CASE( ostream_test ) {
