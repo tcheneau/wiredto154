@@ -61,7 +61,6 @@ def process_start(identifier, filename, command):
                                 stdin = subprocess.PIPE,
                                 stdout = f.fileno(),
                                 stderr = subprocess.STDOUT)
-    t_process.stdin.close()
     with processes_lock:
         processes.append((f, identifier, t_process))
 
