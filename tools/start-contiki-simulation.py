@@ -22,38 +22,75 @@
 # Tony Cheneau <tony.cheneau@nist.gov>
 
 from signal import signal, SIGINT
-import os, select
+import threading, os
 import subprocess, shlex
 
 process = None
+processes = []
+processes_lock = threading.Lock()
 
 def parse_xml(mcast_addr, mcast_port, phy_emu_addr, filename):
     import xml.etree.ElementTree as ET
     tree = ET.parse(os.path.expanduser(filename))
     root = tree.getroot()
     cli = []
+    delayed_cli = []
     for node in root.find("nodes").getiterator("node"):
         if node.get("description") == "": # skip node with no description info
             print "node %s has no description field, skipping it" % node.get("id")
             continue
+        start_time = float(node.get("start-time", default = "0"))
+        stop_time = float(node.get("stop-time", default = "0"))
         args = { "binary": node.get("description"),
                 "identifier": node.get("id"),
                 "mcast_addr": mcast_addr,
                 "mcast_port": mcast_port,
                 "phy_emu_addr": phy_emu_addr,
                 "phy_emu_port": node.get("port") }
-        cli.append((args['identifier'], "{binary} -i {identifier} -m {mcast_addr} -l {mcast_port} -e {phy_emu_addr} -p {phy_emu_port}".format(** args)))
+        if start_time == 0: # no delays
+            cli.append((stop_time, args['identifier'], "{binary} -i {identifier} -m {mcast_addr} -l {mcast_port} -e {phy_emu_addr} -p {phy_emu_port}".format(** args)))
+        else:
+            delayed_cli.append((start_time, stop_time, args['identifier'], "{binary} -i {identifier} -m {mcast_addr} -l {mcast_port} -e {phy_emu_addr} -p {phy_emu_port}".format(** args)))
 
-    return cli
+    return cli, delayed_cli
+
+def process_start(identifier, filename, command):
+    line = shlex.split(command)
+    f = file(filename, 'w')
+    t_process = subprocess.Popen(line,
+                                stdin = subprocess.PIPE,
+                                stdout = f.fileno(),
+                                stderr = subprocess.STDOUT)
+    t_process.stdin.close()
+    with processes_lock:
+        processes.append((f, identifier, t_process))
+
+def delayed_process_start(identifier, *args, **kwargs):
+    print "node %s is starting" % identifier
+    process_start(identifier, *args, **kwargs)
+
+def process_stop(identifier):
+    with processes_lock:
+        for (f, node_identifier, process) in processes:
+            if identifier == node_identifier:
+                print "stopping node %s" % identifier
+                process.send_signal(SIGINT)
+                break
 
 def sig_handler(signal, frame):
     print "manually stopping the nodes"
     try:
-        process.send_signal(SIGINT)
+        with processes_lock:
+            process.send_signal(SIGINT)
+            process.wait()
     except:
         pass
 
+
 if __name__ == "__main__":
+    delayed_start = []
+    delayed_stop = []
+
     # parse arguments
     import argparse
     parser = argparse.ArgumentParser(usage= "log events coming from a wiredto154 simulation",
@@ -68,30 +105,43 @@ if __name__ == "__main__":
 
     print "reading configuration file"
     # read XML file and prepare command line
-    command_lines = parse_xml(args.mcast_addr, args.mcast_port, args.emu_addr, args.filename)
+    command_lines, delayed_command_lines = parse_xml(args.mcast_addr, args.mcast_port, args.emu_addr, args.filename)
 
     # set the signal to end the process gracefully
     signal(SIGINT, sig_handler)
 
     print "starting processes"
     # launch subprocesses
-    processes = []
-    for (identifier, line) in command_lines:
-        line = shlex.split(line)
-        f = file(args.filename_prefix + identifier + ".txt", 'w')
-        process = subprocess.Popen(line,
-                                   stdin = subprocess.PIPE,
-                                   stdout = f.fileno(),
-                                   stderr = subprocess.STDOUT)
-        process.stdin.close()
-        processes.append((f, identifier, process))
+    for (stop_time, identifier, line) in command_lines:
+        filename = args.filename_prefix + identifier + ".txt"
+        process_start(identifier, filename, line)
+        if stop_time:
+            t = threading.Timer(stop_time, process_stop, args = [ identifier ])
+            delayed_stop.append(t)
+            t.start()
+            print "node %s will stop in %f seconds" % (identifier, stop_time)
 
-    print "started %d processes" % len(command_lines)
+    print "started %d processes immediately (%d processes scheduled for later)" % (len(command_lines),
+                                                                                   len(delayed_command_lines))
+
+    for (start_time, stop_time, identifier, cmd) in delayed_command_lines:
+        filename = args.filename_prefix + identifier + ".txt"
+        t = threading.Timer(start_time, delayed_process_start, args = [ identifier, filename, cmd ])
+        delayed_start.append(t)
+        t.start()
+        print "node %s will start in %f seconds" % (identifier, start_time)
+        if stop_time:
+            t = threading.Timer(stop_time, process_stop, args = [ identifier ])
+            delayed_stop.append(t)
+            t.start()
+            print "node %s will stop in %f seconds" % (identifier, stop_time)
+
     print "waiting for the simulation to end (or hit ctrl+c)"
 
     try:
         # wait for things to happen
-        f, identifier, process = processes[0]
+        with processes_lock:
+            f, identifier, process = processes[0]
         ret = process.wait()
     except:
         pass
@@ -99,14 +149,19 @@ if __name__ == "__main__":
     print "cleaning up"
 
     # kill all the subprocesses upon exit
-    for (f, identifier, process) in processes:
-        try:
-            print "stopping node %s" % identifier
-            process.send_signal(SIGINT)
-            process.wait()
-            print "node %s stopped" % identifier
-        except:
-            pass
+    with processes_lock:
+        for (f, identifier, process) in processes:
+            try:
+                print "stopping node %s" % identifier
+                process.send_signal(SIGINT)
+                process.wait()
+                print "node %s stopped" % identifier
+            except:
+                pass
+
+    for t in delayed_start + delayed_stop:
+        t.cancel()
+        t.join(.1)
 
     print "program has exited gracefully"
 
