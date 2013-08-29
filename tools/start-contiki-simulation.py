@@ -22,10 +22,10 @@
 # Tony Cheneau <tony.cheneau@nist.gov>
 
 from signal import signal, SIGINT
+from copy import copy
 import threading, os
 import subprocess, shlex
 
-process = None
 processes = []
 processes_lock = threading.Lock()
 
@@ -70,20 +70,31 @@ def delayed_process_start(identifier, *args, **kwargs):
 
 def process_stop(identifier):
     with processes_lock:
-        for (f, node_identifier, process) in processes:
+        for i, data in enumerate(copy(processes)):
+            (f, node_identifier, process) = data
             if identifier == node_identifier:
                 print "stopping node %s" % identifier
                 process.send_signal(SIGINT)
+                process.wait()
+                del processes[i]
                 break
+
+def kill_all_processes():
+    with processes_lock:
+        for i, data in enumerate(copy(processes)):
+            try:
+                (f, identifier, process) = data
+                print "stopping node %s" % identifier
+                process.send_signal(SIGINT)
+                process.wait()
+                print "node %s stopped" % identifier
+                del processes[i]
+            except:
+                pass
 
 def sig_handler(signal, frame):
     print "manually stopping the nodes"
-    try:
-        with processes_lock:
-            process.send_signal(SIGINT)
-            process.wait()
-    except:
-        pass
+    kill_all_processes()
 
 
 if __name__ == "__main__":
@@ -138,29 +149,23 @@ if __name__ == "__main__":
     print "waiting for the simulation to end (or hit ctrl+c)"
 
     try:
-        # wait for things to happen
-        with processes_lock:
+        # wait for all processes to complete
+        while processes:
             f, identifier, process = processes[0]
-        ret = process.wait()
+            process.wait()
+            with processes_lock:
+                del processes[0]
     except:
         pass
 
     print "cleaning up"
 
-    # kill all the subprocesses upon exit
-    with processes_lock:
-        for (f, identifier, process) in processes:
-            try:
-                print "stopping node %s" % identifier
-                process.send_signal(SIGINT)
-                process.wait()
-                print "node %s stopped" % identifier
-            except:
-                pass
-
     for t in delayed_start + delayed_stop:
         t.cancel()
         t.join(.1)
+
+    # kill all the subprocesses upon exit
+    kill_all_processes()
 
     print "program has exited gracefully"
 
