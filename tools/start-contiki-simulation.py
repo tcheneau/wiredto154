@@ -33,6 +33,7 @@ def parse_xml(mcast_addr, mcast_port, phy_emu_addr, filename):
     import xml.etree.ElementTree as ET
     tree = ET.parse(os.path.expanduser(filename))
     root = tree.getroot()
+    sim_duration = float(root.get("duration", default="0"))
     cli = []
     delayed_cli = []
     for node in root.find("nodes").getiterator("node"):
@@ -52,7 +53,7 @@ def parse_xml(mcast_addr, mcast_port, phy_emu_addr, filename):
         else:
             delayed_cli.append((start_time, stop_time, args['identifier'], "{binary} -i {identifier} -m {mcast_addr} -l {mcast_port} -e {phy_emu_addr} -p {phy_emu_port}".format(** args)))
 
-    return cli, delayed_cli
+    return sim_duration, cli, delayed_cli
 
 def process_start(identifier, filename, command):
     line = shlex.split(command)
@@ -115,7 +116,16 @@ if __name__ == "__main__":
 
     print "reading configuration file"
     # read XML file and prepare command line
-    command_lines, delayed_command_lines = parse_xml(args.mcast_addr, args.mcast_port, args.emu_addr, args.filename)
+    sim_duration, command_lines, delayed_command_lines = parse_xml(args.mcast_addr,
+                                                                   args.mcast_port,
+                                                                   args.emu_addr,
+                                                                   args.filename)
+
+    if sim_duration:
+        print "simulation will end in %f seconds" % sim_duration
+        sim_kill_thead = threading.Timer(sim_duration, kill_all_processes)
+        sim_kill_thead.start()
+
 
     # set the signal to end the process gracefully
     signal(SIGINT, sig_handler)
@@ -160,7 +170,7 @@ if __name__ == "__main__":
 
     print "cleaning up"
 
-    for t in delayed_start + delayed_stop:
+    for t in delayed_start + delayed_stop + [ sim_kill_thead ]:
         t.cancel()
         t.join(.1)
 
