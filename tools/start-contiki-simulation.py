@@ -121,9 +121,9 @@ if __name__ == "__main__":
                                                                    args.emu_addr,
                                                                    args.filename)
 
+    sim_kill_thead = threading.Timer(sim_duration, kill_all_processes)
     if sim_duration:
         print "simulation will end in %f seconds" % sim_duration
-        sim_kill_thead = threading.Timer(sim_duration, kill_all_processes)
         sim_kill_thead.start()
 
 
@@ -172,7 +172,10 @@ if __name__ == "__main__":
 
     for t in delayed_start + delayed_stop + [ sim_kill_thead ]:
         t.cancel()
-        t.join(.1)
+        try:
+            t.join(.1)
+        except RuntimeError:
+            pass
 
     # kill all the subprocesses upon exit
     kill_all_processes()
