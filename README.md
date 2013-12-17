@@ -12,7 +12,7 @@ the integrated *pcap-dumper* enables you to capture the traffic for easier
 debugging.
 
 It implements realistic path loss fading model and Packet Error Rate mechanism.
-Wiredo154 itself doesn't generate any IEEE 802.15.4 and does not even check if
+Wiredto154 itself doesn't generate any IEEE 802.15.4 frame and does not even check if
 the frame it carries has a valid format. Instead, it relies on some modified
 virtual device driver to generate and interpret the frame. To this end,
 Wiredto154 comes with a patch for the Contiki project to add such virtual
@@ -50,7 +50,7 @@ Architecture
 ------------
 
 Virtual motes send data the PHY emulator using unicast UDP.
-The PHY emulator then send a multicast packet with a header that indicates
+The PHY emulator then send a multicast UDP packet with a header that indicates
 which nodes should received the packet uncorrupted and which nodes should
 receive a corrupted packet (thus keeping their radio busy). Using multicast for
 broadcasting the packet saves a lot of bandwidth (a same packet reaches
@@ -148,7 +148,7 @@ The node's transceiver characteristics vary greatly between nodes' models and
 manufacturers, and can even be modified dynamical when the node is being used.
 For this reason, we only provide information on some common nodes, based
 from the manufacturers' specifications and leave to the reader the choice of
-the transceiver characteristics that is choose as a parameter of the
+the transceiver characteristics that is choose as a parameter in the
 simulation.
 
 #### RedBee Econotag
@@ -171,7 +171,7 @@ simulation.
 Ensuring that the simulation runs in a timely manner
 ----------------------------------------------------
 
-It could be when number of nodes increases that the simulation will run to slowly to produce meaningful results.
+When number of nodes increases, it might happen that the simulation runs to slow to produce meaningful results.
 
 Building networks using Wiredto154
 ----------------------------------
